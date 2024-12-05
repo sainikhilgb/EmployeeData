@@ -7,6 +7,13 @@ html {
     font-size: 16px;
   }
 }
+/* Responsive styles */
+@media (max-width: 768px) {
+  table th, table td {
+      font-size: 0.9em; /* Adjust font size for smaller screens */
+      padding: 6px; /* Reduce padding on smaller devices */
+  }
+}
 
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -20,19 +27,12 @@ html {
 
 body {
   margin-bottom: 100px;
+  font-family: Roboto, serif, sans-serif;
 }
-.wrapper{
-  position: relative;
-  
-  width: 100%;
-  background: #fff;
-  padding: 34px;
-  border-radius: 6px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-}
+
 form .input-box select   {
   height: 50%;
-  width: 80%;
+  width: auto;
   outline-width: 10;
   padding: 0 15px;
   font-size: 17px;
@@ -45,7 +45,7 @@ form .input-box select   {
 }
 form .input-box input   {
   height: 50%;
-  width: 80%;
+  width: auto;
   outline-width: 10;
   padding: 0 15px;
   font-size: 17px;
@@ -82,12 +82,14 @@ form div .input-box {
 
 table {
   width: 100%;
-  border-collapse: collapse; /* Optional: for border collapse */
+  /* border-collapse: collapse; Optional: for border collapse */
 }
 
 td {
+  width: auto;
   border: 1px solid #ddd; /* Optional: add border to cells */
   padding: 10px; /* Optional: adjust padding */
+
 }
 
 .first-cell {
@@ -102,4 +104,173 @@ td {
   transform: translateX(-50%); /* Adjust to center */
   padding: 5px 10px; /* Adjust button size */
   font-size: 16px; /* Icon size */
+}
+/* Add this to your CSS file or directly in a `<style>` tag in your HTML */
+
+body {
+  font-family: sans-serif;
+  background-color: #f5f5f5; /* Light gray background */
+}
+
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 5px;
+  background-color: #fff; /* White container background */
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.87); /* Subtle shadow */
+  box-sizing: content-box;
+  width: 100%;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: bold;
+  color: #333; /* Darker text color for labels */
+}
+
+.form-control {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  border-color: #307ECC; /* Blue border on focus */
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.1); /* Subtle blue outline on focus */
+}
+
+.btn {
+  border-radius: 3px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-primary {
+  background-color: #307ECC; /* Primary button - Blue */
+  color: #fff; /* White text on primary button */
+  border-color: #307ECC;
+  transition: all 0.2s ease-in-out;
+  align-items: flex-start;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.btn-primary:hover {
+  background-color: #226BAE; /* Darker blue on hover */
+}
+
+.btn-secondary {
+  background-color: #eee; /* Secondary button - Light gray */
+  color: #333; /* Darker text on secondary button */
+  border-color: #eee;
+  transition: all 0.2s ease-in-out;
+  align-items: flex-start;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.btn-secondary:hover {
+  background-color: #ddd; /* Slightly darker gray on hover */
+}
+/* Add Bootstrap to your project */
+
+.form-control {
+  /* Adjust font size, padding, and border-radius */
+  font-size: 16px;
+  padding: 10px 15px;
+  border-radius: 4px;
+}
+
+.input-box {
+  margin-bottom: 15px;
+}
+
+.input-box label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: red;
+  font-size: 12px;
+}
+
+.delete-row-btn, .btn-primary {
+  /* Style buttons for consistency */
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+tbody .project-details {
+  max-width: max-content;
+}
+/* Table styles */
+table {
+  width: 100%; /* Ensure table spans the full width of the container */
+  border-collapse: collapse; /* Avoid double borders */
+}
+
+/* Table header and cell styles */
+table th, table td {
+  border: 1px solid #ddd; /* Light gray border for cells */
+  padding: 8px; /* Consistent padding for cells */
+  text-align: left; /* Left-align content */
+  vertical-align: top; /* Align cell content to the top */
+  word-wrap: keep-all; /* Wrap long text inside cells */
+  white-space: normal; /* Ensure multi-line content is shown */
+}
+
+/* Ensure rows adjust height based on content */
+table tbody tr {
+  height: auto; /* Adjust row height dynamically */
+}
+
+
+/* Scrollable container for tables with large content */
+.scrollable {
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+/* Hidden row template styling */
+#template-row.d-none {
+  display: none; /* Keep the template row hidden */
+}
+
+/* Visible row template (toggle dynamically) */
+#template-row.visible {
+  display: table-row; /* Display as a regular table row */
+}
+
+/* Adjust buttons and action elements inside cells */
+table td button {
+  padding: 5px 10px; /* Consistent button padding */
+  margin: 5px 0; /* Add vertical spacing for buttons */
+  font-size: 0.9em; /* Slightly smaller button font size */
+}
+
+/* Body cell styling */
+tbody td {
+  border: 1px solid #ddd; /* Border for clarity */
+  padding: 8px;
+  text-align: left; /* Align text to the left for easy readability */
+  vertical-align: top;
+  word-wrap: break-word; /* Wrap text to prevent overflow */
+  white-space: normal; /* Ensure text wraps properly */
+}
+
+/* Set fixed widths for better column visibility */
+th, td {
+  width: 100px; /* Default width for each column */
+  max-width: 150px; /* Prevent excessive column width */
+  overflow: hidden; /* Hide any content that exceeds width */
 }

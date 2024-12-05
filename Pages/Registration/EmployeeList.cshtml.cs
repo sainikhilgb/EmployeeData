@@ -55,144 +55,8 @@ namespace EmployeeData.Pages.Registration
             }
         }
 
-        public async Task<IActionResult> OnPost()
-{
-    // Validate model
-    if (!ModelState.IsValid)
-    {
-        LoadDropdownOptions(); // Reload dropdown options if validation fails
-    List<string> validationErrors = new List<string>();
-        foreach (var key in ModelState.Keys)
-        {
-            foreach (var error in ModelState[key].Errors)
-            {
-                validationErrors.Add(error.ErrorMessage);
-            }
-        }
-
-        // Return a response with the validation errors
-        return BadRequest(new { errors = validationErrors });
-    }
-
-    try
-    {
-        // Ensure ExcelPackage licensing
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-        // Define the file path
-        string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
-
-        // Ensure directory exists
-        string directory = Path.GetDirectoryName(employeeFilePath);
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        // Check if the file exists, or create a new one
-        bool isNewFile = !System.IO.File.Exists(employeeFilePath);
-        using var package = new ExcelPackage(new FileInfo(employeeFilePath));
-
-        // Load or create the worksheet
-        var worksheet = package.Workbook.Worksheets["Employees"];
-        // if (worksheet == null)
-        // {
-        //     worksheet = package.Workbook.Worksheets.Add("Employees");
-
-        //     // // Define headers
-        //     // string[] headers = new[]
-        //     // {
-        //     //     "EmpId", "GGID", "Resource", "Email", "Gender", "DateOfHire", "Grade", "GlobalGrade", "BU",
-        //     //     "IsActiveInProject", "OverallExp", "Skills", "Certificates","AltriaStartdate","AltriaEnddate",
-        //     //      "BGVStatus","VISAStatus","ProjectCode", "ProjectName", "PONumber", "PODName", "StartDate", 
-        //     //     "EndDate","Location","OffshoreCity", "OffshoreBackup", "AltriaPODOwner", "ALCSDirector", "Type", 
-        //     //     "Tower", "ABLGBL", "TLName",  "SL","New", "Transition", "COR", "Group", "RoleinPOD", "MonthlyPrice"
-        //     // };
-
-         
-        //     //  // Add dynamic months to headers
-        //     // var month = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-        //     // headers = headers.Concat(month).ToArray();
-
-        //     // // Populate header row
-        //     // for (int i = 0; i < headers.Length; i++)
-        //     // {
-        //     //     worksheet.Cells[1, i + 1].Value = headers[i];
-        //     // }
-        // }
-
-        // Determine the next row
-        var rowCount = worksheet.Dimension?.Rows ?? 1;
-
-        // Prepare employee data to insert
-        var employeeData = new Dictionary<string, object>
-        {
-            { "EmpId", employees.EmpId },
-            { "GGID", employees.GGID },
-            { "Resource", employees.Resource },
-            { "Email", employees.Email },
-            { "Gender", employees.Gender },
-            { "DateOfHire", employees.DateOfHire.ToString("yyyy-MM-dd") },
-            { "Grade", employees.Grade },
-            { "GlobalGrade", employees.GlobalGrade },
-            { "BU", employees.BU },
-            { "IsActiveInProject", employees.IsActiveInProject },
-            { "OverallExp", employees.OverallExp.ToString() },
-            { "Skills", employees.Skills },
-            { "Certificates", employees?.Certificates },
-            { "AltriaStartdate", employees.AltriaStartdate.ToString("yyyy-MM-dd") },
-            { "AltriaEnddate", employees.AltriaEnddate.ToString("yyyy-MM-dd") },
-            { "BGVStatus", employees.BGVStatus },
-            { "VISAStatus", employees.VISAStatus },
-            { "ProjectCode", project.ProjectCode },
-            { "ProjectName", project.ProjectName },
-            { "PONumber", project.PONumber },
-            { "PODName", project.PODName },
-            { "StartDate", project.StartDate.ToString("yyyy-MM-dd") },
-            { "EndDate", project.EndDate.ToString("yyyy-MM-dd") },
-            { "Location", project.Location },
-            { "OffshoreCity", project.OffshoreCity },
-            { "OffshoreBackup", project.OffshoreBackup },
-            { "AltriaPODOwner", project.AltriaPODOwner },
-            { "ALCSDirector", project.ALCSDirector },
-            { "Type", project.Type },
-            { "Tower", project.Tower },
-            { "ABLGBL", project.ABLGBL },
-            { "TLName", project.TLName },
-            { "Transition", project.Transition },
-            { "COR", project.COR },
-            { "Group", project.Group },
-            { "RoleinPOD", project.RoleinPOD },
-            { "MonthlyPrice", project.MonthlyPrice.ToString() }
-        };
-            
-        
-
-
-        // Insert data into the worksheet
-        int column = 1;
-        foreach (var data in employeeData)
-        {
-            worksheet.Cells[rowCount + 1, column].Value = data.Value;
-            column++;
-        }
-
-        // Save the changes to the file
-        await package.SaveAsync();
-
-        // Redirect to employee list
-        return RedirectToPage("/Registration/EmployeeList");
-    }
-    catch (Exception ex)
-    {
-        // Log and display error
-        Console.WriteLine($"Error: {ex.Message}");
-        ModelState.AddModelError("", "An error occurred while processing the request.");
-        LoadDropdownOptions(); // Reload dropdowns
-        return Page();
-    }
-}
-private void LoadDropdownOptions()
+       
+        private void LoadDropdownOptions()
         {
             GradeOptions = new List<SelectListItem>();
             GlobalGradeOptions = new List<SelectListItem>();
@@ -292,7 +156,7 @@ private void LoadDropdownOptions()
                 var worksheet = package.Workbook.Worksheets["Employees"];
                 if (worksheet != null)
                 {
-                    var rowCount = worksheet.Dimension.Rows;
+                    var rowCount = worksheet.Dimension?.Rows ?? 6;
 
                     // Loop through the rows and add employees
                     for (int row = 6; row <= rowCount; row++)
@@ -304,7 +168,7 @@ private void LoadDropdownOptions()
                             Resource = worksheet.Cells[row, 17].Text,
                             Email = worksheet.Cells[row, 16].Text,
                             Gender = worksheet.Cells[row, 21].Text,
-                            DateOfHire = ParseDate(worksheet.Cells[row, 6].Text),
+                            DateOfHire = ParseDate(worksheet.Cells[row, 126].Text),
                             Grade = worksheet.Cells[row, 18].Text,
                             GlobalGrade = worksheet.Cells[row, 19].Text,
                             BU = worksheet.Cells[row, 4].Text,
@@ -333,7 +197,7 @@ private void LoadDropdownOptions()
             
          // Assuming Project data is in the second sheet
                 if(worksheet!= null){
-                var rowCount = worksheet.Dimension.Rows;
+                var rowCount = worksheet.Dimension?.Rows ?? 6;
 
                 for (int row = 6; row <= rowCount; row++) // Skip header row
                 {
@@ -415,10 +279,10 @@ private void DeleteEmployeeFromExcel(int empId)
             var worksheet = package.Workbook.Worksheets["Employees"];
             if (worksheet != null)
             {
-                var rowCount = worksheet.Dimension.Rows;
+              var rowCount = worksheet.Dimension?.Rows ?? 6;
                 for (int row = 6; row <= rowCount; row++) // Skip header
                 {
-                    int currentEmpId = ParseInt(worksheet.Cells[row, 1].Text);
+                    int currentEmpId = ParseInt(worksheet.Cells[row, 15].Text);
                     if (currentEmpId == empId)
                     {
                         worksheet.DeleteRow(row);

@@ -9,14 +9,6 @@
       "PackagePath": "staticwebassets\\EmployeeData.xlsx"
     },
     {
-      "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\EmployeeData\\EmployeeData.xlsx",
-      "PackagePath": "staticwebassets\\EmployeeData\\EmployeeData.xlsx"
-    },
-    {
-      "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\EmployeeData\\Employees.xlsx",
-      "PackagePath": "staticwebassets\\EmployeeData\\Employees.xlsx"
-    },
-    {
       "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },

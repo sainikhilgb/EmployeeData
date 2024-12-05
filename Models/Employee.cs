@@ -21,6 +21,7 @@ namespace EmployeeData.Models
         [Required(ErrorMessage = "Please Select your Grade")]
         public string Grade {get; set;}
         public string GlobalGrade {get; set;}
+        
         [Required(ErrorMessage = "Please enter the date of hire")]
         [DataType(DataType.Date)]
         [DisplayName("Date Of Hire")]

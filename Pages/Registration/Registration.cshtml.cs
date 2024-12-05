@@ -71,8 +71,7 @@ namespace EmployeeData.Pages.Registration
                 var worksheet = package.Workbook.Worksheets["Employees"];
             
 
-                // Determine the next row
-                var rowCount = worksheet.Dimension?.Rows ?? 1;
+               var rowCount = worksheet.Dimension?.Rows ?? 6;
 
                 if (Employee.EmpId != null) // If editing, update the existing record
                 {
@@ -179,10 +178,10 @@ namespace EmployeeData.Pages.Registration
 
         private int GetEmployeeRow(ExcelWorksheet worksheet, string empId)
         {
-            var rowCount = worksheet.Dimension?.Rows ?? 1;
+            var rowCount = worksheet.Dimension?.Rows ?? 6;
             for (int row = 6; row <= rowCount; row++)
             {
-                var cellValue = worksheet.Cells[row, 1].Text; // Assuming EmpId is in column 1
+                var cellValue = worksheet.Cells[row, 15].Text; // Assuming EmpId is in column 1
                 if (cellValue == empId)
                 {
                     return row;
@@ -215,15 +214,38 @@ namespace EmployeeData.Pages.Registration
             };
         }
 
-        private void AddEmployeeToExcel(ExcelWorksheet worksheet, int rowCount)
+        private void AddEmployeeToExcel(ExcelWorksheet worksheet, int row)
         {
-            var employeeData = GetEmployeeData();
-            int column = 1;
-            foreach (var data in employeeData)
+            // Find last used row
+            int lastRow = worksheet.Dimension?.Rows ?? 5; // Adjust default value based on header rows
+            for (int i = lastRow; i >= 6; i--) // Start from bottom, excluding header rows
             {
-                worksheet.Cells[rowCount + 1, column].Value = data.Value;
-                column++;
+                if (worksheet.Cells[i, 1].Value != null) // Check if any cell in the row has data
+                {
+                    lastRow = i;
+                    break;
+                }
             }
+
+            // Add new row at the end (lastRow + 1)
+            row = lastRow + 1;
+            worksheet.Cells[row, 15].Value = Employee.EmpId; // EmpId
+            worksheet.Cells[row, 14].Value = Employee.GGID;// GGID
+            worksheet.Cells[row, 17].Value = Employee.Resource; // Resource
+            worksheet.Cells[row, 16].Value = Employee.Email; // Email
+            worksheet.Cells[row, 21].Value = Employee.Gender; // Gender
+            worksheet.Cells[row, 126].Value = Employee.DateOfHire.ToString("yyyy-MM-dd"); // DateOfHire
+            worksheet.Cells[row, 18].Value = Employee.Grade; // Grade
+            worksheet.Cells[row, 19].Value = Employee.GlobalGrade; // GlobalGrade
+            worksheet.Cells[row, 4].Value = Employee.BU; // BU
+            worksheet.Cells[row, 20].Value = Employee.IsActiveInProject; // IsActiveInProject
+            worksheet.Cells[row, 27].Value = Employee.OverallExp; // OverallExp
+            worksheet.Cells[row, 28].Value = Employee.Skills; // Skills
+            worksheet.Cells[row, 33].Value = Employee.Certificates; // Certificates
+            worksheet.Cells[row, 127].Value = Employee.AltriaStartdate.ToString("yyyy-MM-dd"); // AltriaStartdate
+            worksheet.Cells[row, 128].Value = Employee.AltriaEnddate.ToString("yyyy-MM-dd"); // AltriaEnddate
+            worksheet.Cells[row, 129].Value = Employee.BGVStatus; // BGVStatus
+            worksheet.Cells[row, 130].Value = Employee.VISAStatus; // VISAStatus
         }
 
         private List<Employee> GetAllEmployees()
@@ -239,7 +261,7 @@ namespace EmployeeData.Pages.Registration
                 var worksheet = package.Workbook.Worksheets["Employees"];
                 if (worksheet != null)
                 {
-                    var rowCount = worksheet.Dimension?.Rows ?? 1;
+                    var rowCount = worksheet.Dimension?.Rows ?? 6;
                     for (int row = 6; row <= rowCount; row++)
                     {
                         var emp = new Employee
@@ -254,7 +276,7 @@ namespace EmployeeData.Pages.Registration
                             GlobalGrade = worksheet.Cells[row, 19].Text,
                             BU = worksheet.Cells[row, 4].Text,
                             IsActiveInProject = worksheet.Cells[row, 20].Text,
-                            OverallExp = ParseInt(worksheet.Cells[row, 27].Text),
+                            OverallExp = ParseDecimal(worksheet.Cells[row, 27].Text),
                             Skills = worksheet.Cells[row, 28].Text,
                             Certificates = worksheet.Cells[row, 33].Text,
                             AltriaStartdate = ParseDate(worksheet.Cells[row, 127].Text),

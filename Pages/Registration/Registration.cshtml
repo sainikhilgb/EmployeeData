@@ -11,41 +11,41 @@
     <form method="post">
     <div class="container row">
     
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="EmpId">Employee ID</label>
         <input type="number"  id="EmpId" name="Employee.EmpId" class="form-control" value="@Model.Employee.EmpId" />
     </div>
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="GGID">GGID </label>
         <input type="number"  id="GGID" name="Employee.GGID" class="form-control" value="@Model.Employee.GGID" />
     </div>
-    <div class="input-box col-6">
+    <div class="input-box col-4">
         <label for="Resource">Resource</label>
         <input asp-for="Employee.Resource" class="form-control" />
         <span asp-validation-for="Employee.Resource" class="text-danger"></span>
     </div>
 
-    <div class="input-box col-6">
+    <div class="input-box col-4">
         <label for="Email">Email</label>
         <input asp-for="Employee.Email" class="form-control" />
         <span asp-validation-for="Employee.Email" class="text-danger"></span>
     </div>
 
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="Grade">Grade</label>
         <select asp-for="Employee.Grade" asp-items="Model.GradeOptions" class="form-control">
             <option value="">-- Select Grade --</option>
         </select>
         <span asp-validation-for="Employee.Grade" class="text-danger"></span>
     </div>
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="GlobalGrade">Global Grade</label>
         <select asp-for="Employee.GlobalGrade" asp-items="Model.GlobalGradeOptions" class="form-control">
             <option value="">-- Select GlobalGrade --</option>
         </select>
         <span asp-validation-for="Employee.GlobalGrade" class="text-danger"></span>
     </div>
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="BU">Business Unit</label>
         <select asp-for="Employee.BU" asp-items="Model.BUOptions" class="form-control">
             <option value="">-- Select BU --</option>
@@ -54,7 +54,7 @@
     </div>
     
 
-     <div class="input-box col-3">
+     <div class="input-box col-4">
         <label for="Gender">Gender</label>
         <select asp-for="Employee.Gender" class="form-control">
             <option value="">-- Select Gender --</option>
@@ -68,19 +68,19 @@
         <input asp-for="Employee.DateOfHire" type="date" onload="getDate()" class="form-control date-field"/>
         <span asp-validation-for="Employee.DateOfHire" class="text-danger"></span>
     </div>
-    <div class="input-box col-3">
+    <div class="input-box col-4">
             <label for="OverallExp">Overall EXP</label>
             <input asp-for="Employee.OverallExp" type="number" step="0.01" class="form-control"/>
             <span asp-validation-for="Employee.OverallExp" class="text-danger"></span>
     </div>
 
-        <div class="input-box col-3">
+        <div class="input-box col-4">
             <label for="Skills">Skills</label>
             <input asp-for="Employee.Skills" type="text" class="form-control"/>
             <span asp-validation-for="Employee.Skills" class="text-danger"></span>
         </div>
 
-        <div class="input-box col-3">
+        <div class="input-box col-4">
             <label for="Certificates">Certificates</label>
             <input asp-for="Employee.Certificates" class="form-control" type="text" id="Certificates">
             <span asp-validation-for="Employee.Certificates" class="text-danger"></span>
@@ -91,13 +91,14 @@
         <span asp-validation-for="Employee.AltriaStartdate" class="text-danger"></span>
      </div>
      
+     
      <div class="input-box col-4">
         <label for="AltriaEnddate">Altria End date</label>
         <input asp-for="Employee.AltriaEnddate" type="date" onload="getDate()" class="form-control date-field"/>
         <span asp-validation-for="Employee.AltriaEnddate" class="text-danger"></span>
      </div>
         
-        <div class="form-group col-3">
+        <div class="form-group col-4">
         <label>Active in Project:</label>
         <div>
             <input type="radio" id="activeYes" name="Employee.IsActiveInProject" value="Yes" asp-for="Employee.IsActiveInProject" />
@@ -110,27 +111,29 @@
         <span asp-validation-for="Employee.IsActiveInProject" class="text-danger"></span>
         
     </div>
-    <div class="input-box col-3">
+    <div class="input-box col-4">
         <label for="BGV">BGV Status</label>
         <select asp-for="Employee.BGVStatus" asp-items="Model.BGVOptions" class="form-control">
-            <option value="">-- Select BGV Status --</option>
+            <option value="">--Select BGV Status --</option>
         </select>
         <span asp-validation-for="Employee.BGVStatus" class="text-danger"></span>
     </div>
-     <div class="input-box col-3">
+     <div class="input-box col-4">
         <label for="VISAStatus">VISA Status</label>
         <select asp-for="Employee.VISAStatus" class="form-control">
-            <option value="">-- Select VISAStatus --</option>
+            <option value="">--Select VISAStatus --</option>
             <option value="Approved"> Approved </option>
             <option value="Pending"> Pending </option>
         </select>
         <span asp-validation-for="Employee.VISAStatus" class="text-danger"></span>
-    
-<div>
+     </div>
+
 
     <button type="submit" class="btn btn-primary">@ViewData["Title"]</button>
+
     <a asp-page="/Registration/EmployeeList" class="btn btn-secondary">Back to List</a>
-</div>
+    
+
 </form>
 
 </div> 

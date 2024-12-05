@@ -40,23 +40,23 @@ function fetchProjectName() {
 
 
   
-  document.getElementById('add-btn').addEventListener('click', function (event) {
-    event.preventDefault();
+document.getElementById('add-btn').addEventListener('click', function(event) {
+  event.preventDefault();
 
-    const tableBody = document.getElementById('project-details');
-    const templateRow = document.getElementById('template-row');
+  const tableBody = document.getElementById('project-details');
+  const templateRow = document.getElementById('template-row');
 
-    // Clone the hidden template row
-    const newRow = templateRow.cloneNode(true);
-    newRow.id = ''; // Clear the ID to avoid duplicates
-    newRow.classList.remove('d-none'); // Make it visible
+  // Clone the template row
+  const newRow = templateRow.cloneNode(true);
+  newRow.id = ''; // Remove the id to avoid conflicts
+  newRow.classList.remove('d-none'); // Make the row visible
 
-    // Append the new row to the table body
-    tableBody.appendChild(newRow);
+  // Append the new row to the table body
+  tableBody.appendChild(newRow);
 
-    // Add functionality for the delete button in the new row
-    const deleteBtn = newRow.querySelector('.delete-row-btn');
-    deleteBtn.addEventListener('click', function () {
-        tableBody.removeChild(newRow);
-    });
+  // Add event listener to the delete button in the new row
+  const deleteBtn = newRow.querySelector('.delete-row-btn');
+  deleteBtn.addEventListener('click', function() {
+      tableBody.removeChild(newRow);
+  });
 });
