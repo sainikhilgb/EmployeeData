@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "QcNtu6408NoagxmguZwQvNS2sM8vgrNfnlrMi14iFJc=",
+  "Hash": "zAmuethS90uz5URZG7ZEDE6qNTn2e7aNPmOU0cBOSq4=",
   "Source": "EmployeeData",
   "BasePath": "_content/EmployeeData",
   "Mode": "Default",
@@ -110,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\Images\\Background.png",
+      "SourceId": "EmployeeData",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\",
+      "BasePath": "_content/EmployeeData",
+      "RelativePath": "Images/Background.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\Background.png"
     },
     {
       "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\js\\site.js",
@@ -1212,6 +1231,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\site.css",
+      "SourceId": "EmployeeData",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\",
+      "BasePath": "_content/EmployeeData",
+      "RelativePath": "site.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\site.css"
     }
   ]
 }

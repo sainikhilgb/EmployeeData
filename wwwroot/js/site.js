@@ -16,47 +16,43 @@ function getDate() {
 }
 window.onload = getDate;
 
-function fetchProjectName() {
-  const projectCodeSelect = document.getElementById("projectCode");
-  const selectedOption = projectCodeSelect.options[projectCodeSelect.selectedIndex].value;
-  console.log(selectedOption)
-
-  const currentPage = window.location.pathname;
-  const handlerUrl = currentPage.includes("EmployeeList")
-    ? `?handler=ProjectName&projectCode=${selectedOption}`
-    : `?handler=ProjectName&projectCode=${selectedOption}`;
-
+function fetchProjectName(projectCode) {
   $.ajax({
-    url: handlerUrl,
-    type: "GET",
-    success: function(projectName) {
-      $("#projectName").val(projectName);
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error("Error fetching project name:", textStatus, errorThrown);
-    }
+      url: `Registration?handler=ProjectName&projectCode=${projectCode}`,
+      type: "GET",
+      success: function(projectName) {
+          $("#ProjectName").val(projectName);
+      },
+      error: function(error) {
+          console.error("Error fetching project name:", error);
+      }
   });
 }
 
+function fetchGlobalGrade(grade) {
+    $.ajax({
+        url: `Registration?handler=GlobalGrade&Grade=${grade}`,
+        type: "GET",
+        success: function(GlobalGrade) {
+            $("#GlobalGrade").val(GlobalGrade);
+        },
+        error: function(error) {
+            console.error("Error fetching project name:", error);
+        }
+    });
+  }
 
   
-document.getElementById('add-btn').addEventListener('click', function(event) {
-  event.preventDefault();
-
-  const tableBody = document.getElementById('project-details');
-  const templateRow = document.getElementById('template-row');
-
-  // Clone the template row
-  const newRow = templateRow.cloneNode(true);
-  newRow.id = ''; // Remove the id to avoid conflicts
-  newRow.classList.remove('d-none'); // Make the row visible
-
-  // Append the new row to the table body
-  tableBody.appendChild(newRow);
-
-  // Add event listener to the delete button in the new row
-  const deleteBtn = newRow.querySelector('.delete-row-btn');
-  deleteBtn.addEventListener('click', function() {
-      tableBody.removeChild(newRow);
-  });
-});
+  function editEmployee(empId) {
+    $.ajax({
+        url: `Registration/Registration?handler=empId=${empId}`,
+        type: "GET",
+        success: function(GlobalGrade) {
+            $("#GlobalGrade").val(GlobalGrade);
+        },
+        error: function(error) {
+            console.error("Error fetching project name:", error);
+        }
+    });
+    window.location.href = `http://localhost:5165/Registration/Registration?handler=empId=${empId}`;
+}

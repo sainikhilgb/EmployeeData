@@ -1,10 +1,7 @@
 using EmployeeData.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using OfficeOpenXml;  // EPPlus library to read Excel files
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
+using OfficeOpenXml;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EmployeeData.Pages.Registration
@@ -13,8 +10,8 @@ namespace EmployeeData.Pages.Registration
     {
         [BindProperty]
         public Employee employees { get; set; } = new Employee();
+        
         [BindProperty]
-        public Project project { get; set; } = new Project();
 
         public List<SelectListItem> GradeOptions { get; set; }
          public List<SelectListItem> GlobalGradeOptions { get; set; }
@@ -31,31 +28,42 @@ namespace EmployeeData.Pages.Registration
         public string SearchTerm { get; set; }
 
         public List<Employee> Employees { get; set; } = new List<Employee>();
-        public List<Project> Projects { get; set; } = new List<Project>();
+       
         private readonly string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
 
         private Dictionary<string, string> projectCodeToNameMapping = new Dictionary<string, string>();
 
+    
+
 
         // Method to load Employee and Project details from Excel
+             public string Message { get; set; }
         public void OnGet()
         {
            LoadDropdownOptions();
             LoadEmployeeData();
-            LoadProjectData();
-
-                     // Apply search filter if a SearchTerm is provided and is a valid EmpId
+            // Apply search filter if a SearchTerm is provided and is a valid EmpId
             if (!string.IsNullOrEmpty(SearchTerm))
-            {
-                if (int.TryParse(SearchTerm, out int searchEmpId))
-                {
-                    // If it's a valid integer, filter the employees based on EmpId
-                    Employees = Employees.Where(e => e.EmpId.ToString().Contains(SearchTerm)).ToList();
-                }
-            }
-        }
+             {
+            // Filter the employees based on EmpId or Email
+            var filteredEmployees = Employees
+                .Where(e => e.EmpId.ToString().Contains(SearchTerm) || e.Email.Contains(SearchTerm))
+                .ToList();
 
-       
+            if (filteredEmployees.Any())
+            {
+                Employees = filteredEmployees; // Update the list with filtered employees
+            }
+            else
+            {
+                Message = $"No Employee Details found with the given {SearchTerm}.";
+            }
+            }
+    }
+        
+
+         
+
         private void LoadDropdownOptions()
         {
             GradeOptions = new List<SelectListItem>();
@@ -163,7 +171,7 @@ namespace EmployeeData.Pages.Registration
                     {
                         var employee = new Employee
                         {
-                            EmpId = ParseInt(worksheet.Cells[row, 15].Text),
+                            EmpId = worksheet.Cells[row, 15].Text,
                             GGID = ParseInt(worksheet.Cells[row, 14].Text),
                             Resource = worksheet.Cells[row, 17].Text,
                             Email = worksheet.Cells[row, 16].Text,
@@ -180,31 +188,8 @@ namespace EmployeeData.Pages.Registration
                             AltriaEnddate = ParseDate(worksheet.Cells[row, 128].Text),
                             BGVStatus = worksheet.Cells[row, 129].Text,
                             VISAStatus = worksheet.Cells[row, 130].Text,
-                        
-                    };
 
-                        Employees.Add(employee);
-                    }
-                }
-            }
-        }
-
-        // Method to load Project data from Excel file
-        private void LoadProjectData()
-        {
-            var package = new ExcelPackage(new FileInfo(employeeFilePath));
-            var worksheet = package.Workbook.Worksheets["Employees"];
-            
-         // Assuming Project data is in the second sheet
-                if(worksheet!= null){
-                var rowCount = worksheet.Dimension?.Rows ?? 6;
-
-                for (int row = 6; row <= rowCount; row++) // Skip header row
-                {
-                    
-                    var project = new Project
-                    {
-                        ProjectCode = ParseInt(worksheet.Cells[row, 7].Text),
+                            ProjectCode = ParseInt(worksheet.Cells[row, 7].Text),
                         ProjectName = worksheet.Cells[row, 8].Text,
                         PONumber = ParseInt(worksheet.Cells[row, 9].Text),
                         PODName = worksheet.Cells[row, 10].Text,
@@ -236,20 +221,20 @@ namespace EmployeeData.Pages.Registration
                         October = ParseDecimal(worksheet.Cells[row,45].Text),
                         November = ParseDecimal(worksheet.Cells[row,46].Text),
                         December =ParseDecimal(worksheet.Cells[row,47].Text),
+                        
                     };
 
-                    
-
-                    Projects.Add(project);  // Add project to the Projects list
+                        Employees.Add(employee);
                     }
                 }
+            }
         }
             
         
 
 // Method to delete an employee
 [HttpDelete]
-public IActionResult OnPostDelete(int empId)
+public IActionResult OnPostDelete(string empId)
 {
     // Remove employee from the in-memory list
     var employeeToDelete = Employees.FirstOrDefault(e => e.EmpId == empId)?? new Employee();
@@ -268,55 +253,100 @@ public IActionResult OnPostDelete(int empId)
     return RedirectToPage();
 }
 
-// Method to delete an employee from the Excel file
-private void DeleteEmployeeFromExcel(int empId)
-{
-    if (System.IO.File.Exists(employeeFilePath))
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage(new FileInfo(employeeFilePath)))
+
+
+        // Method to delete an employee from the Excel file
+        private void DeleteEmployeeFromExcel(string empId)
         {
-            var worksheet = package.Workbook.Worksheets["Employees"];
-            if (worksheet != null)
+            if (System.IO.File.Exists(employeeFilePath))
             {
-              var rowCount = worksheet.Dimension?.Rows ?? 6;
-                for (int row = 6; row <= rowCount; row++) // Skip header
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(new FileInfo(employeeFilePath)))
                 {
-                    int currentEmpId = ParseInt(worksheet.Cells[row, 15].Text);
-                    if (currentEmpId == empId)
+                    var worksheet = package.Workbook.Worksheets["Employees"];
+                    if (worksheet != null)
                     {
-                        worksheet.DeleteRow(row);
-                        break;
+                    var rowCount = worksheet.Dimension?.Rows ?? 6;
+                        for (int row = 6; row <= rowCount; row++) // Skip header
+                        {
+                            string currentEmpId = worksheet.Cells[row, 15].Text;
+                            if (currentEmpId == empId)
+                            {
+                                worksheet.DeleteRow(row);
+                                break;
+                            }
+                        }
+
+                        // Save changes to the Excel file
+                        package.Save();
                     }
                 }
-
-                // Save changes to the Excel file
-                package.Save();
             }
         }
+
+
+// Method to delete an project
+[HttpDelete]
+public IActionResult OnPostProjectDelete(int projectCode)
+{
+    // Remove employee from the in-memory list
+    var employeeToDelete = Employees.FirstOrDefault(e => e.ProjectCode == projectCode)?? new Employee();
+    if (employeeToDelete != null)
+    {
+        Employees.Remove(employeeToDelete);
+
+        // Update the Excel file
+        DeleteProjectFromExcel(projectCode);
+
+        // Reload data to reflect changes
+     LoadEmployeeData();
     }
+
+    // Redirect back to the same page after deletion
+    return RedirectToPage();
 }
-        [HttpGet]
-        public IActionResult OnGetProjectName(string projectCode)
+
+
+
+        // Method to delete an employee from the Excel file
+        private void DeleteProjectFromExcel(int projectCode)
         {
-            LoadDropdownOptions();
-            if (string.IsNullOrWhiteSpace(projectCode))
-                return new JsonResult("Invalid Project Code");
+            if (System.IO.File.Exists(employeeFilePath))
+            {
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var package = new ExcelPackage(new FileInfo(employeeFilePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets["Employees"];
+                    if (worksheet != null)
+                    {
+                    var rowCount = worksheet.Dimension?.Rows ?? 6;
+                        for (int row = 6; row <= rowCount; row++) // Skip header
+                        {
+                            int currentProjectCode = ParseInt(worksheet.Cells[row, 7].Text);
+                            if (currentProjectCode == projectCode)
+                            {
+                                worksheet.DeleteRow(row);
+                                break;
+                            }
+                        }
 
-            if (projectCodeToNameMapping.TryGetValue(projectCode, out var projectName))
-                return new JsonResult(projectName);
-
-            return new JsonResult("Project Code not found");
+                        // Save changes to the Excel file
+                        package.Save();
+                    }
+                }
+            }
         }
+       
+        
 
               private DateTime ParseDate(string dateString)
-        {
-            if (DateTime.TryParse(dateString, out var date))
             {
-                return date;
+                if (DateTime.TryParse(dateString, out var date))
+                {
+                    return date;
+                }
+                return DateTime.MinValue; // Default value for invalid or missing dates
             }
-            return DateTime.MinValue; // Default value for invalid or missing dates
-        }
 
         private int ParseInt(string numberString)
         {

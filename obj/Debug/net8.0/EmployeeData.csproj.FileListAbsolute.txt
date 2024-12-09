@@ -25,6 +25,7 @@ C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\n
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.RazorAssemblyInfo.cache
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.RazorAssemblyInfo.cs
+C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.sourcelink.json
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\staticwebassets\msbuild.EmployeeData.Microsoft.AspNetCore.StaticWebAssets.props
@@ -41,4 +42,3 @@ C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\n
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.pdb
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.genruntimeconfig.cache
 C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\ref\EmployeeData.dll
-C:\Users\sgodlave\OneDrive - Capgemini\Documents\DotNet\EmployeeData\obj\Debug\net8.0\EmployeeData.sourcelink.json

@@ -1,5 +1,3 @@
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,12 +10,13 @@ builder.Services.AddCors(options =>
     builder =>
     {
       builder.WithOrigins(
-        "http://localhost:5116/Registration/EmployeeList?handler=ProjectName&projectCode={id}"
+        "http://localhost:5116/Registration/RegistrationployeeList?handler=ProjectName&projectCode={id}"
       )
       .AllowAnyMethod()
       .AllowAnyHeader();
     });
 });
+
 
 var app = builder.Build();
 
@@ -39,5 +38,8 @@ app.UseCors("AllowMyOrigin"); // Add CORS middleware after UseRouting
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseWebSockets();
+
 
 app.Run();

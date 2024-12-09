@@ -1,62 +1,58 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-a {
-  color: #0077cc;
+body {
+  background-image: url('../Images/Background.png');
+  /* Other background properties (optional) */
+  background-size: cover; /* To cover the entire screen */
+  background-repeat: no-repeat; /* To prevent image repetition */
+  background-position: center; /* To center the image */
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
-}
-body {margin:0;}
-
+/* Style the navigation bar */
 .icon-bar {
-  width: 100%;
-  background-color: #555;
-  overflow: auto;
+  background-color: rgb(28, 98, 162); /* Semi-transparent black background */
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  width: 104%; /* Full viewport width */
+  margin: 0; /* Remove any default margins */
 }
 
 .icon-bar a {
-  float: left;
-  width: 20%;
-  text-align: center;
-  padding: 12px 0;
-  transition: all 0.3s ease;
   color: white;
-  font-size: 26px;
+  padding: 14px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  font-size: 25px;
+  border-radius: 10px;
 }
 
 .icon-bar a:hover {
-  background-color: rgb(229, 229, 229);
+  background-color: #45a049;
+  transform: scale(1.1); /* Slightly increase size on hover */
 }
 
-.active {
-  background-color: rgb(0, 112, 173);
+.icon-bar a.active {
+  color: white;
+}
+
+html{
+  max-width: 100%;
+  
+}
+ .fa-label {
+  font-family: Verdana;
+  font-weight: 900;;
+
+}
+
+/* Responsive design: Making the icon bar more responsive */
+@media (max-width: 768px) {
+  .icon-bar a {
+      
+      padding: 10px 12px;
+  }
 }

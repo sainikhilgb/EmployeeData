@@ -6,35 +6,30 @@
     <title>@ViewData["Title"] - EmployeeData</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Pages/Shared/_Layout.cshtml.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EmployeeData.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+
 </head>
-<body>
-    <div class="icon-bar col-12">
-  <a class="active col-3" href="/Index" ><i class="fa fa-home"> Employee Portal</i></a>
-  <a  class="col-3" href="/Index"><i class="fa fa-home"> Home</i></a>
-   <a class="col-3" href="/Registration/Registration"><i class="fa fa-user-plus" aria-hidden="true"> Register</i></a>
-  <a class="col-3" href="/Registration/EmployeeList"><i class="fa fa-users" aria-hidden="true"> View Employees</i></a> 
+<body id="Home">
+    <div class=" icon-bar col-12">
+  <a class="active col-3" href="/Registration/Registration" ><i class="fa fa-home"><span class="fa-label">Employee Portal</span> </i></a>
+   <a class="col-3" href="/Registration/Registration"><i class="fa fa-user-plus" aria-hidden="true"><span class="fa-label">Register</span></i></a>
+  <a class="col-3" href="/Registration/EmployeeList"><i class="fa fa-users" aria-hidden="true"> <span class="fa-label">View Employees</span></i></a> 
 </div>
      
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
+     <div class="container">
+        <main role="main" >
+             @RenderBody() 
+            
         </main>
-    </div>
+     </div>
+   
+<div>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - EmployeeData - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+</div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

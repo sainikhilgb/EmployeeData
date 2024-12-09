@@ -9,6 +9,10 @@
       "PackagePath": "staticwebassets\\EmployeeData.xlsx"
     },
     {
+      "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\Images\\Background.png",
+      "PackagePath": "staticwebassets\\Images\\Background.png"
+    },
+    {
       "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -247,6 +251,10 @@
     {
       "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\site.css",
+      "PackagePath": "staticwebassets\\site.css"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.EmployeeData.Microsoft.AspNetCore.StaticWebAssets.props",

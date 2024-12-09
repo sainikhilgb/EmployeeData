@@ -9,16 +9,28 @@ namespace EmployeeData.Pages.Registration
 {
     public class Registration : PageModel
     {
-        private readonly string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
+        private string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
 
         [BindProperty]
         public Employee Employee { get; set; } = new Employee();
 
         public List<SelectListItem> GradeOptions { get; set; }
-        public List<SelectListItem> GlobalGradeOptions { get; set; }
+         public List<SelectListItem> GlobalGradeOptions { get; set; }
         public List<SelectListItem> BUOptions { get; set; }
         public List<SelectListItem> BGVOptions { get; set; }
+        public List<SelectListItem> ProjectCodeOptions { get; set; }
+        public List<SelectListItem> ProjectNameOptions { get; set; }
+        public List<SelectListItem> PODNameOptions { get; set; }
+        public List<SelectListItem> OffShoreCityOptions { get; set; }
+        public List<SelectListItem> TypeOptions { get; set; }
+        public List<SelectListItem> TowerOptions { get; set; }
 
+        private Dictionary<string, string> projectCodeToNameMapping = new Dictionary<string, string>();
+
+        private Dictionary<string, string> GradeToGlobalGrade = new Dictionary<string, string>();
+
+
+                 
         // OnGet to load dropdown options and initialize the form
         public IActionResult OnGet(string empId)
         {
@@ -29,8 +41,13 @@ namespace EmployeeData.Pages.Registration
             {
                 // Edit existing employee, load data
                 Employee = GetEmployeeById(empId);
-                if (Employee == null)
+                if (Employee != null)
                 {
+                    Employee = Employee;
+                }
+                else
+                {
+                    // Handle the case where the employee is not found
                     return NotFound();
                 }
             }
@@ -38,12 +55,14 @@ namespace EmployeeData.Pages.Registration
             return Page();
         }
 
+        
         // OnPost to save a new employee record or update an existing one
         public async Task<IActionResult> OnPost()
         {
             // Validate model
             if (!ModelState.IsValid)
             {
+                LogModelErrors();
                 LoadDropdownOptions(); // Reload dropdown options if validation fails
                 return Page();
             }
@@ -54,7 +73,7 @@ namespace EmployeeData.Pages.Registration
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
                 // Define the file path
-                string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
+                 employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
 
                 // Ensure directory exists
                 string directory = Path.GetDirectoryName(employeeFilePath);
@@ -73,44 +92,101 @@ namespace EmployeeData.Pages.Registration
 
                var rowCount = worksheet.Dimension?.Rows ?? 6;
 
-                if (Employee.EmpId != null) // If editing, update the existing record
+                if (string.IsNullOrEmpty(Employee.EmpId)) // If editing, update the existing record
                 {
-                    var existingRow = GetEmployeeRow(worksheet, Employee.EmpId.ToString());
+                    int existingRow = GetEmployeeRow(worksheet, Employee.EmpId, Employee.ProjectCode);
                     if (existingRow != -1)
                     {
                         // Update the existing row with new data
                         var employeeData = GetEmployeeData();
-                        int column = 1;
-                        foreach (var data in employeeData)
-                        {
-                            worksheet.Cells[existingRow, column].Value = data.Value;
-                            column++;
+                        worksheet.Cells[rowCount, 15].Value = Employee.EmpId; // EmpId
+                        worksheet.Cells[rowCount, 14].Value = Employee.GGID;// GGID
+                        worksheet.Cells[rowCount, 17].Value = Employee.Resource; // Resource
+                        worksheet.Cells[rowCount, 16].Value = Employee.Email; // Email
+                        worksheet.Cells[rowCount, 21].Value = Employee.Gender; // Gender
+                        worksheet.Cells[rowCount, 126].Value = Employee.DateOfHire.ToString("dd-MM-yyy"); // DateOfHire
+                        worksheet.Cells[rowCount, 18].Value = Employee.Grade; // Grade
+                        worksheet.Cells[rowCount, 19].Value = Employee.GlobalGrade; // GlobalGrade
+                        worksheet.Cells[rowCount, 4].Value = Employee.BU; // BU
+                        worksheet.Cells[rowCount, 20].Value = Employee.IsActiveInProject; // IsActiveInProject
+                        worksheet.Cells[rowCount, 27].Value = Employee.OverallExp; // OverallExp
+                        worksheet.Cells[rowCount, 28].Value = Employee.Skills; // Skills
+                        worksheet.Cells[rowCount, 33].Value = Employee.Certificates; // Certificates
+                        worksheet.Cells[rowCount, 127].Value = Employee.AltriaStartdate.ToString("dd-MM-yyy"); // AltriaStartdate
+                        worksheet.Cells[rowCount, 128].Value = Employee.AltriaEnddate.ToString("dd-MM-yyy"); // AltriaEnddate
+                        worksheet.Cells[rowCount, 129].Value = Employee.BGVStatus; // BGVStatus
+                        worksheet.Cells[rowCount, 133].Value = Employee.BGVCompletionDate.ToString("dd-MM-yyy"); // Column 133: BGV EndDate
+                        worksheet.Cells[rowCount, 130].Value = Employee.VISAStatus; // VISAStatus
+
+                        worksheet.Cells[rowCount, 1].Value = Employee.Type; // Column 1: Type
+                        worksheet.Cells[rowCount, 2].Value = Employee.Tower; // Column 2: Tower
+                        worksheet.Cells[rowCount, 3].Value = Employee.ABLGBL; // Column 3: ABLGBL
+                        worksheet.Cells[rowCount, 5].Value = Employee.TLName; // Column 5: TLName
+                        worksheet.Cells[rowCount, 7].Value = Employee.ProjectCode; // Column 7: ProjectCode
+                        worksheet.Cells[rowCount, 8].Value = Employee.ProjectName; // Column 8: ProjectName
+                        worksheet.Cells[rowCount, 9].Value = Employee.PONumber; // Column 9: PONumber
+                        worksheet.Cells[rowCount, 10].Value = Employee.PODName; // Column 10: PODName
+                        worksheet.Cells[rowCount, 12].Value = Employee.AltriaPODOwner; // Column 12: AltriaPODOwner
+                        worksheet.Cells[rowCount, 13].Value = Employee.ALCSDirector; // Column 13: ALCSDirector
+                        worksheet.Cells[rowCount, 22].Value = Employee.Location; // Column 22: Location
+                        worksheet.Cells[rowCount, 23].Value = Employee.OffshoreCity; // Column 23: OffshoreCity
+                        worksheet.Cells[rowCount, 34].Value = Employee.OffshoreBackup; // Column 34: OffshoreBackup
+                        worksheet.Cells[rowCount, 35].Value = Employee.Transition; // Column 35: Transition
+                        worksheet.Cells[rowCount, 60].Value = Employee.COR; // Column 60: COR
+                        worksheet.Cells[rowCount, 62].Value = Employee.Group; // Column 62: Group
+                        worksheet.Cells[rowCount, 25].Value = Employee.RoleinPOD; // Column 25: RoleinPOD
+                        worksheet.Cells[rowCount, 63].Value = Employee.MonthlyPrice; // Column 63: MonthlyPrice
+                        worksheet.Cells[rowCount, 26].Value = Employee.AltriaEXP; // Column 63: MonthlyPrice
+
+                        // Dates: Ensure that start and end dates are formatted correctly
+                        worksheet.Cells[rowCount, 131].Value = Employee.StartDate.ToString("dd-MM-yyy"); // Column 131: StartDate
+                        worksheet.Cells[rowCount, 132].Value = Employee.EndDate.ToString("dd-MM-yyy"); // Column 132: EndDate
+
+                        
+                        return RedirectToPage("/Registration/EmployeeList");
                         }
+                            else
+                            {
+                                // If employee not found for editing, append as new
+                                AddEmployeeToExcel(worksheet, rowCount);
+
+                            
+                            }
+                        }
+                        else // If adding a new employee, append as new
+                        {
+                            AddEmployeeToExcel(worksheet, rowCount);
+                        
+                        }
+
+                        // Save the changes to the file
+                        await package.SaveAsync();
+
+                        // Redirect to employee list
+                        return RedirectToPage("/Registration/EmployeeList");
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        // If employee not found for editing, append as new
-                        AddEmployeeToExcel(worksheet, rowCount);
+                        // Log and display error
+                        Console.WriteLine($"Error: {ex.Message}");
+                        ModelState.AddModelError("", "An error occurred while processing the request.");
+                        LoadDropdownOptions(); // Reload dropdowns
+                        return Page();
                     }
                 }
-                else // If adding a new employee, append as new
-                {
-                    AddEmployeeToExcel(worksheet, rowCount);
-                }
 
-                // Save the changes to the file
-                await package.SaveAsync();
-
-                // Redirect to employee list
-                return RedirectToPage("/Registration/EmployeeList");
-            }
-            catch (Exception ex)
+       private void LogModelErrors()
+        {
+            foreach (var state in ModelState)
             {
-                // Log and display error
-                Console.WriteLine($"Error: {ex.Message}");
-                ModelState.AddModelError("", "An error occurred while processing the request.");
-                LoadDropdownOptions(); // Reload dropdowns
-                return Page();
+                if (state.Value.Errors.Any())
+                {
+                    Console.WriteLine($"Key: {state.Key}");
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Error: {error.ErrorMessage}");
+                    }
+                }
             }
         }
 
@@ -120,6 +196,13 @@ namespace EmployeeData.Pages.Registration
             GlobalGradeOptions = new List<SelectListItem>();
             BUOptions = new List<SelectListItem>();
             BGVOptions = new List<SelectListItem>();
+            ProjectCodeOptions = new List<SelectListItem>();
+            ProjectNameOptions = new List<SelectListItem>();
+            PODNameOptions = new List<SelectListItem>();
+            OffShoreCityOptions = new List<SelectListItem>();
+            TypeOptions = new List<SelectListItem>();
+            TowerOptions = new List<SelectListItem>();
+            
 
             if (System.IO.File.Exists(employeeFilePath))
             {
@@ -133,14 +216,22 @@ namespace EmployeeData.Pages.Registration
 
                     for (int row = 2; row <= rowCount; row++)
                     {
+                        
                         var grade = worksheet.Cells[row, 1]?.Text?.Trim();
                         var bu = worksheet.Cells[row, 2]?.Text?.Trim();
+                        var projectcode = worksheet.Cells[row, 3]?.Text?.Trim();
+                        var projectname = worksheet.Cells[row, 4]?.Text?.Trim();
+                        var PODname = worksheet.Cells[row, 5]?.Text?.Trim();
+                        var Offshore = worksheet.Cells[row, 6]?.Text?.Trim();
+                        var type = worksheet.Cells[row, 7]?.Text?.Trim();
+                        var tower = worksheet.Cells[row, 8]?.Text?.Trim();
                         var globalgrade = worksheet.Cells[row, 9]?.Text?.Trim();
                         var bgv = worksheet.Cells[row, 10]?.Text?.Trim();
 
                         if (!string.IsNullOrWhiteSpace(grade)) 
                         { 
                             GradeOptions.Add(new SelectListItem { Value = grade, Text = grade });
+                            GradeToGlobalGrade.Add(grade, globalgrade);
                         }
 
                         if (!string.IsNullOrWhiteSpace(bu))
@@ -148,10 +239,31 @@ namespace EmployeeData.Pages.Registration
                         if (!string.IsNullOrWhiteSpace(bgv))
                             BGVOptions.Add(new SelectListItem { Value = bgv, Text = bgv });
 
-                        if (!string.IsNullOrWhiteSpace(globalgrade)) 
-                        { 
-                            GlobalGradeOptions.Add(new SelectListItem { Value = globalgrade, Text = globalgrade });
+                    
+                        if (!string.IsNullOrWhiteSpace(projectcode) && !string.IsNullOrWhiteSpace(projectname))
+                        {
+                            ProjectCodeOptions.Add(new SelectListItem { Value = projectcode, Text = projectcode });
+                             projectCodeToNameMapping.Add(projectcode, projectname);
                         }
+                        
+                        if (!string.IsNullOrWhiteSpace(PODname))
+                        {
+                            PODNameOptions.Add(new SelectListItem { Value = PODname, Text = PODname });
+                        }
+                        if (!string.IsNullOrWhiteSpace(Offshore))
+                        {
+                            OffShoreCityOptions.Add(new SelectListItem { Value = Offshore, Text = Offshore });
+                        }
+                        if (!string.IsNullOrWhiteSpace(type))
+                        {
+                            TypeOptions.Add(new SelectListItem { Value = type, Text = type });
+                        }
+                        if (!string.IsNullOrWhiteSpace(tower))
+                        {
+                            TowerOptions.Add(new SelectListItem { Value = tower, Text = tower });
+                        }
+
+                        
                     }
                 }
                 else
@@ -167,51 +279,29 @@ namespace EmployeeData.Pages.Registration
 
         private Employee GetEmployeeById(string empId)
         {
-            // Try to parse the empId string to an integer
-            if (int.TryParse(empId, out int parsedEmpId))
-            {
-                var employees = GetAllEmployees();
-                return employees.FirstOrDefault(emp => emp.EmpId == parsedEmpId); // Compare as integers
-            }
-            return null; // Return null if empId is not a valid integer
+            var employees = GetAllEmployees();
+            return employees.FirstOrDefault(emp => emp.EmpId == empId);
         }
 
-        private int GetEmployeeRow(ExcelWorksheet worksheet, string empId)
+
+        private int GetEmployeeRow(ExcelWorksheet worksheet, string empId,int projectCode)
         {
             var rowCount = worksheet.Dimension?.Rows ?? 6;
             for (int row = 6; row <= rowCount; row++)
             {
-                var cellValue = worksheet.Cells[row, 15].Text; // Assuming EmpId is in column 1
-                if (cellValue == empId)
+                if (worksheet.Cells[row, 15].Text == empId && worksheet.Cells[row, 7].Text == projectCode.ToString())
                 {
-                    return row;
+                    return row; // Row number where match is found
                 }
             }
             return -1;
         }
 
-        private Dictionary<string, object> GetEmployeeData()
+
+         private Dictionary<string,object> GetEmployeeData()
         {
-            return new Dictionary<string, object>
-            {
-                { "EmpId", Employee.EmpId },
-                { "GGID", Employee.GGID },
-                { "Resource", Employee.Resource },
-                { "Email", Employee.Email },
-                { "Gender", Employee.Gender },
-                { "DateOfHire", Employee.DateOfHire.ToString("yyyy-MM-dd") },
-                { "Grade", Employee.Grade },
-                { "GlobalGrade", Employee.GlobalGrade },
-                { "BU", Employee.BU },
-                { "IsActiveInProject", Employee.IsActiveInProject },
-                { "OverallExp", Employee.OverallExp.ToString() },
-                { "Skills", Employee.Skills },
-                { "Certificates", Employee?.Certificates },
-                { "AltriaStartdate", Employee.AltriaStartdate.ToString("yyyy-MM-dd") },
-                { "AltriaEnddate", Employee.AltriaEnddate.ToString("yyyy-MM-dd") },
-                { "BGVStatus", Employee.BGVStatus },
-                { "VISAStatus", Employee.VISAStatus },
-            };
+            return typeof(Employee).GetProperties()
+                .ToDictionary(prop => prop.Name, prop => prop.GetValue(Employee));
         }
 
         private void AddEmployeeToExcel(ExcelWorksheet worksheet, int row)
@@ -234,7 +324,7 @@ namespace EmployeeData.Pages.Registration
             worksheet.Cells[row, 17].Value = Employee.Resource; // Resource
             worksheet.Cells[row, 16].Value = Employee.Email; // Email
             worksheet.Cells[row, 21].Value = Employee.Gender; // Gender
-            worksheet.Cells[row, 126].Value = Employee.DateOfHire.ToString("yyyy-MM-dd"); // DateOfHire
+            worksheet.Cells[row, 126].Value = Employee.DateOfHire.ToString("dd-MM-yyy"); // DateOfHire
             worksheet.Cells[row, 18].Value = Employee.Grade; // Grade
             worksheet.Cells[row, 19].Value = Employee.GlobalGrade; // GlobalGrade
             worksheet.Cells[row, 4].Value = Employee.BU; // BU
@@ -242,10 +332,35 @@ namespace EmployeeData.Pages.Registration
             worksheet.Cells[row, 27].Value = Employee.OverallExp; // OverallExp
             worksheet.Cells[row, 28].Value = Employee.Skills; // Skills
             worksheet.Cells[row, 33].Value = Employee.Certificates; // Certificates
-            worksheet.Cells[row, 127].Value = Employee.AltriaStartdate.ToString("yyyy-MM-dd"); // AltriaStartdate
-            worksheet.Cells[row, 128].Value = Employee.AltriaEnddate.ToString("yyyy-MM-dd"); // AltriaEnddate
+            worksheet.Cells[row, 127].Value = Employee.AltriaStartdate.ToString("dd-MM-yyy"); // AltriaStartdate
+            worksheet.Cells[row, 128].Value = Employee.AltriaEnddate.ToString("dd-MM-yyy"); // AltriaEnddate
             worksheet.Cells[row, 129].Value = Employee.BGVStatus; // BGVStatus
+            worksheet.Cells[row, 133].Value = Employee.BGVCompletionDate.ToString("dd-MM-yyy"); // BGV Enddate
             worksheet.Cells[row, 130].Value = Employee.VISAStatus; // VISAStatus
+
+            worksheet.Cells[row, 1].Value = Employee.Type; // Column 1: Type
+            worksheet.Cells[row, 2].Value = Employee.Tower; // Column 2: Tower
+            worksheet.Cells[row, 3].Value = Employee.ABLGBL; // Column 3: ABLGBL
+            worksheet.Cells[row, 5].Value = Employee.TLName; // Column 5: TLName
+            worksheet.Cells[row, 7].Value = Employee.ProjectCode; // Column 7: ProjectCode
+            worksheet.Cells[row, 8].Value = Employee.ProjectName; // Column 8: ProjectName
+            worksheet.Cells[row, 9].Value = Employee.PONumber; // Column 9: PONumber
+            worksheet.Cells[row, 10].Value = Employee.PODName; // Column 10: PODName
+            worksheet.Cells[row, 12].Value = Employee.AltriaPODOwner; // Column 12: AltriaPODOwner
+            worksheet.Cells[row, 13].Value = Employee.ALCSDirector; // Column 13: ALCSDirector
+            worksheet.Cells[row, 22].Value = Employee.Location; // Column 22: Location
+            worksheet.Cells[row, 23].Value = Employee.OffshoreCity; // Column 23: OffshoreCity
+            worksheet.Cells[row, 34].Value = Employee.OffshoreBackup; // Column 34: OffshoreBackup
+            worksheet.Cells[row, 35].Value = Employee.Transition; // Column 35: Transition
+            worksheet.Cells[row, 60].Value = Employee.COR; // Column 60: COR
+            worksheet.Cells[row, 62].Value = Employee.Group; // Column 62: Group
+            worksheet.Cells[row, 25].Value = Employee.RoleinPOD; // Column 25: RoleinPOD
+            worksheet.Cells[row, 63].Value = Employee.MonthlyPrice; // Column 63: MonthlyPrice
+            worksheet.Cells[row, 26].Value = Employee.AltriaEXP; // Column 63: Altria Exp
+
+            // Dates: Ensure that start and end dates are formatted correctly
+            worksheet.Cells[row, 131].Value = Employee.StartDate.ToString("dd-MM-yyy"); // Column 131: StartDate
+            worksheet.Cells[row, 132].Value = Employee.EndDate.ToString("dd-MM-yyy"); // Column 132: EndDate
         }
 
         private List<Employee> GetAllEmployees()
@@ -266,7 +381,7 @@ namespace EmployeeData.Pages.Registration
                     {
                         var emp = new Employee
                         {
-                            EmpId = ParseInt(worksheet.Cells[row, 15].Text),
+                            EmpId = worksheet.Cells[row, 15].Text,
                             GGID = ParseInt(worksheet.Cells[row, 14].Text),
                             Resource = worksheet.Cells[row, 17].Text,
                             Email = worksheet.Cells[row, 16].Text,
@@ -282,7 +397,43 @@ namespace EmployeeData.Pages.Registration
                             AltriaStartdate = ParseDate(worksheet.Cells[row, 127].Text),
                             AltriaEnddate = ParseDate(worksheet.Cells[row, 128].Text),
                             BGVStatus = worksheet.Cells[row, 129].Text,
+                            BGVCompletionDate = ParseDate(worksheet.Cells[row, 133].Text),
                             VISAStatus = worksheet.Cells[row, 130].Text,
+
+                            ProjectCode = ParseInt(worksheet.Cells[row, 7].Text),
+                            ProjectName = worksheet.Cells[row, 8].Text,
+                            PONumber = ParseInt(worksheet.Cells[row, 9].Text),
+                            PODName = worksheet.Cells[row, 10].Text,
+                            StartDate = ParseDate(worksheet.Cells[row, 131].Text),
+                            EndDate = ParseDate(worksheet.Cells[row, 132].Text),
+                            Location = worksheet.Cells[row, 22].Text,
+                            OffshoreCity = worksheet.Cells[row, 23].Text,
+                            OffshoreBackup = worksheet.Cells[row, 34].Text,
+                            AltriaPODOwner = worksheet.Cells[row, 12].Text,
+                            ALCSDirector = worksheet.Cells[row, 13].Text,
+                            Type = worksheet.Cells[row, 1].Text,
+                            Tower = worksheet.Cells[row, 2].Text,
+                            ABLGBL = worksheet.Cells[row, 3].Text,
+                            TLName = worksheet.Cells[row, 5].Text,
+                            Transition = worksheet.Cells[row, 35].Text,
+                            Group = worksheet.Cells[row, 62].Text,
+                            RoleinPOD = worksheet.Cells[row, 25].Text,
+                            MonthlyPrice = ParseDecimal(worksheet.Cells[row, 63].Text),
+                            AltriaEXP = ParseDecimal(worksheet.Cells[row, 26].Text),
+                            COR = worksheet.Cells[row, 60].Text,
+                            January = ParseDecimal(worksheet.Cells[row, 36].Text),
+                            February = ParseDecimal(worksheet.Cells[row, 37].Text),
+                            March = ParseDecimal(worksheet.Cells[row, 38].Text),
+                            April = ParseDecimal(worksheet.Cells[row, 39].Text),
+                            May = ParseDecimal(worksheet.Cells[row, 40].Text),
+                            June = ParseDecimal(worksheet.Cells[row, 41].Text),
+                            July = ParseDecimal(worksheet.Cells[row, 42].Text),
+                            August = ParseDecimal(worksheet.Cells[row, 43].Text),
+                            September = ParseDecimal(worksheet.Cells[row, 44].Text),
+                            October = ParseDecimal(worksheet.Cells[row, 45].Text),
+                            November = ParseDecimal(worksheet.Cells[row, 46].Text),
+                            December = ParseDecimal(worksheet.Cells[row, 47].Text),
+                        
                         };
                         employees.Add(emp);
                     }
@@ -290,6 +441,33 @@ namespace EmployeeData.Pages.Registration
             }
             return employees;
         }
+
+            [HttpGet]
+            public IActionResult OnGetProjectName(string projectCode)
+            {
+            LoadDropdownOptions();
+            if (string.IsNullOrWhiteSpace(projectCode))
+                return new JsonResult("Invalid Project Code");
+
+            if (projectCodeToNameMapping.TryGetValue(projectCode, out var projectName))
+                return new JsonResult(projectName);
+
+            return new JsonResult("Project Code not found");
+             }
+
+             [HttpGet]
+            public IActionResult OnGetGlobalGrade(string grade)
+            {
+            LoadDropdownOptions();
+            if (string.IsNullOrWhiteSpace(grade))
+                return new JsonResult("Invalid Grade");
+
+            if (GradeToGlobalGrade.TryGetValue(grade, out var GlobalGrade))
+                return new JsonResult(GlobalGrade);
+
+            return new JsonResult("Global Grade not found");
+             }
+
 
         private DateTime ParseDate(string dateString)
         {

@@ -2,19 +2,29 @@
 @using EmployeeData.Models
 @model EmployeeData.Pages.Registration.EmployeeList
 @{
-    ViewData["Title"] = "Employee Registration/Edit";
+    ViewData["Title"] =  "Employee List" ;
 }
-
-<h2>Employee Details</h2>
+<div class=" mb-4 row">
 
 <!-- Search Form -->
-<form method="get" class="mb-4">
+    <h2 class="section-header">Employee Details</h2>
+<form method="get" class=" search-form col-4">
     <div class="form-group">
         <label for="SearchTerm">Search:</label>
-        <input type="text" id="SearchTerm" name="SearchTerm" class="form-control" value="@Model.SearchTerm" placeholder="Enter search term" />
+        <input type="text" id="SearchTerm" name="SearchTerm" class="form-group" value="@Model.SearchTerm" placeholder="Enter search term" />
     </div>
-    <button type="submit" class="btn btn-primary">Search</button>
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-warning">@Model.Message</div>
+}
+    <button id="search-btn"type="submit" class="btn btn-primary">Search</button>
 </form>
+<div class="col-4">
+<a href="https://app.powerbi.com/links/ska3BhZRLm?ctid=76a2ae5a-9f00-4f6b-95ed-5d33d77c4d61&pbi_source=linkShare&bookmarkGuid=63068241-2b95-496f-bdfc-3b04dd64b672"target="_blank">
+<button class=" redirect-button ml-20" >Powerbi BI Report</button>
+</a>
+</div>
+</div>
 
 <!-- Display No Results Found Message if Employees List is Empty -->
 @if (Model.Employees.Count == 0 && !string.IsNullOrEmpty(Model.SearchTerm))
@@ -23,8 +33,8 @@
 }
 <!-- Employee Table -->
 <div class="scrollable row">
-<table class="table">
-    <thead>
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>Employee Id</th>
             <th>GGID</th>
@@ -47,7 +57,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Employees != null && Model.Employees.Any(emp => emp.EmpId > 0))
+        @if (Model.Employees != null && Model.Employees.Any(emp => emp.EmpId != " "))
             {
                 @foreach (var employee in Model.Employees)
                 {
@@ -57,7 +67,7 @@
                         <td>@employee.Resource</td>
                         <td>@employee.Email</td>
                         <td>@employee.Gender</td>
-                        <td>@employee.DateOfHire.ToString("yyyy-MM-dd")</td>
+                        <td>@employee.DateOfHire.ToString("dd-MM-yyy")</td>
                         <td>@employee.Grade</td>
                         <td>@employee.GlobalGrade</td>
                         <td>@employee.BU</td>
@@ -65,13 +75,14 @@
                         <td>@employee.OverallExp</td>
                         <td>@employee.Skills</td>
                         <td>@employee.Certificates</td>
-                        <td>@employee.AltriaStartdate.ToString("yyyy-MM-dd")</td>
-                        <td>@employee.AltriaEnddate.ToString("yyyy-MM-dd")</td>
+                        <td>@employee.AltriaStartdate.ToString("dd-MM-yyy")</td>
+                        <td>@employee.AltriaEnddate.ToString("dd-MM-yyy")</td>
                         <td>@employee.BGVStatus</td>
                         <td>@employee.VISAStatus</td>
                         <td>
-                     <a asp-page="/Registration/Registration" asp-route-empId="@employee.EmpId"><button class="btn btn-primary">Edit</button></a>
-
+                        <form method="get" asp-page="/Registration/Registration" asp-route-empId="@employee.EmpId" style="display:inline;">
+                                <button type="submit" class="btn btn-primary" >Edit</button>
+                        </form>
                         <form method="post" asp-page-handler="Delete" asp-route-empId="@employee.EmpId" style="display:inline;">
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
                         </form>
@@ -86,254 +97,108 @@
             }
     </tbody>
 </table>
-<a href="/Registration/Registration"><i class="fa fa-user-plus" aria-hidden="true"> Register</i></a>
+<a id="register" href="/Registration/Registration"><i class="fa fa-user-plus" aria-hidden="true"> Register</i></a>
 </div>
 
-<h2>Project Details</h2>
 
-<div class="scrollable row">
-<table class="table">
-    <thead>
-        <tr>
-             
-            <th>Project Code
-                <button id="add-btn"><i class="fa fa-plus" aria-hidden="true"></i></button>
-            </th>
-            <th>Project Name</th>
-            <th>PO Number</th>
-            <th>POD Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Location</th>
-            <th>Off shore City</th>
-            <th>Off shore Backup</th>
-            <th>Altria POD Owner</th>
-            <th>ALCS Director</th>
-            <th>Type</th>
-            <th>Tower</th>
-            <th>ABLGBL</th>
-            <th>TL Name</th>
-            <th>Transition</th>
-            <th>COR</th>
-            <th>Group</th>
-            <th>Role in POD</th>
-            <th>January</th>
-            <th>February</th>
-            <th>March</th>
-            <th>April</th>
-            <th>May</th>
-            <th>June</th>
-            <th>July</th>
-            <th>August</th>
-            <th>September</th>
-            <th>October</th>
-            <th>November</th>
-            <th>December</th>
-            <th>Monthly Price</th>
-    </tr>
 
-    </thead>
-    <tbody>
-            @if (Model.Projects != null && Model.Projects.Any())
+<div class="scrollable row ">
+    <h2 class="section-header">Project Details</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Project Code
+                </th>
+                <th>Project Name</th>
+                <th>PO Number</th>
+                <th>POD Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Location</th>
+                <th>Off shore City</th>
+                <th>Off shore Backup</th>
+                <th>Altria POD Owner</th>
+                <th>ALCS Director</th>
+                <th>Type</th>
+                <th>Tower</th>
+                <th>ABLGBL</th>
+                <th>TL Name</th>
+                <th>Transition</th>
+                <th>COR</th>
+                <th>Group</th>
+                <th>Role in POD</th>
+                <th>January</th>
+                <th>February</th>
+                <th>March</th>
+                <th>April</th>
+                <th>May</th>
+                <th>June</th>
+                <th>July</th>
+                <th>August</th>
+                <th>September</th>
+                <th>October</th>
+                <th>November</th>
+                <th>December</th>
+                <th>Monthly Price</th> 
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Employees != null && Model.Employees.Any(emp => emp.EmpId != " "))
             {
-                @foreach (var projects in Model.Projects)
+                @foreach (var employee in Model.Employees)
                 {
-                    
                     <tr>
-                        <td>@projects.ProjectCode</td>
-                        <td>@projects.ProjectName</td>
-                        <td>@projects.PONumber</td>
-                        <td>@projects.PODName</td>
-                        <td>@projects.StartDate.ToString("yyyy-MM-dd")</td>
-                        <td>@projects.EndDate.ToString("yyyy-MM-dd")</td>
-                        <td>@projects.Location</td>
-                        <td>@projects.OffshoreCity</td>
-                        <td>@projects.OffshoreBackup</td>
-                        <td>@projects.AltriaPODOwner</td>
-                        <td>@projects.ALCSDirector</td>
-                        <td>@projects.Type</td>
-                        <td>@projects.Tower</td>
-                        <td>@projects.ABLGBL</td>
-                        <td>@projects.TLName</td>
-                        <td>@projects.Transition</td>
-                        <td>@projects.COR</td>
-                        <td>@projects.Group</td>
-                        <td>@projects.RoleinPOD</td>
-                        <td>@projects.MonthlyPrice</td>
-                        <td>@projects.January</td>
-                        <td>@projects.February</td>
-                        <td>@projects.March</td>
-                        <td>@projects.April</td>
-                        <td>@projects.May</td>
-                        <td>@projects.June</td>
-                        <td>@projects.July</td>
-                        <td>@projects.August</td>
-                        <td>@projects.September</td>
-                        <td>@projects.October</td>
-                        <td>@projects.November</td>
-                        <td>@projects.December</td>
+                        <td>@employee.ProjectCode</td>
+                        <td>@employee.ProjectName</td>
+                        <td>@employee.PONumber</td>
+                        <td>@employee.PODName</td>
+                        <td>@employee.StartDate.ToString("dd-MM-yyy")</td>
+                        <td>@employee.EndDate.ToString("dd-MM-yyy")</td>
+                        <td>@employee.Location</td>
+                        <td>@employee.OffshoreCity</td>
+                        <td>@employee.OffshoreBackup</td>
+                        <td>@employee.AltriaPODOwner</td>
+                        <td>@employee.ALCSDirector</td>
+                        <td>@employee.Type</td>
+                        <td>@employee.Tower</td>
+                        <td>@employee.ABLGBL</td>
+                        <td>@employee.TLName</td>
+                        <td>@employee.Transition</td>
+                        <td>@employee.COR</td>
+                        <td>@employee.Group</td>
+                        <td>@employee.RoleinPOD</td>
+                        <td>@employee.MonthlyPrice</td>
+                        <td>@employee.January</td>
+                        <td>@employee.February</td>
+                        <td>@employee.March</td>
+                        <td>@employee.April</td>
+                        <td>@employee.May</td>
+                        <td>@employee.June</td>
+                        <td>@employee.July</td>
+                        <td>@employee.August</td>
+                        <td>@employee.September</td>
+                        <td>@employee.October</td>
+                        <td>@employee.November</td>
+                        <td>@employee.December</td> 
                         <td>
-                             <form method="post" asp-page-handler="Delete" asp-route-empId="@projects.ProjectCode" style="display:inline;">
+                         <form method="get" asp-page="/Registration/Registration" asp-route-empId="@employee.EmpId" style="display:inline;">
+                                <button type="submit" class="btn btn-primary" >Edit</button>
+                        </form> 
+                            <form method="post" asp-page-handler="ProjectDelete" asp-route-projectCode="@employee.ProjectCode" style="display:inline;">
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Project details?')">Delete</button>
                         </form>
                         </td>
                     </tr>
                 }
-            }else
+            }
+            else
             {
                 <tr>
                     <td colspan="14" class="text-center">No project details available.</td>
                 </tr>
             }
         </tbody>
-         <!-- Hidden Template Row -->
-    <tbody id="project-details">
-
-            
-        <form action="post">
-            <tr  id="template-row" class="d-none">
-                <td>
-                        <select id="ProjectCode" asp-for="project.ProjectCode" asp-items="Model.ProjectCodeOptions" onchange="fetchemployeesName()"  class="form-control">
-                            <option value="">-- Select Project Code --</option>
-                        </select>
-                        <span asp-validation-for="project.ProjectCode" class="text-danger"></span>
-                </td>
-                <td>
-                        <input type="text" id="ProjectName" name="project.ProjectName" class="form-control" readonly />
-                    
-                </td>
-                <td>
-                        <input type="number"  id="PONumber" name="project.PONumber" class="form-control" value="@Model.project.PONumber" />
-                   
-                </td>
-                <td>
-                   
-                        <select asp-for="project.PODName" asp-items="Model.PODNameOptions" class="form-control">
-                            <option value="">-- Select POD Name --</option>
-                        </select>
-                        <span asp-validation-for="project.PODName" class="text-danger"></span>
-                   
-                </td>
-                <td>
-                        <input asp-for="project.StartDate" type="date" onload="getDate()" class="form-control date-field" />
-                        <span asp-validation-for="project.StartDate" class="text-danger"></span>
-                </td>
-                <td>
-                   
-                        <input asp-for="project.EndDate" type="date" onload="getDate()" class="form-control date-field"/>
-                        <span asp-validation-for="project.EndDate" class="text-danger"></span>
-                  
-                </td>
-                <td>
-                    
-                        <select id="location" asp-for="project.Location" class="form-control">
-                            <option value="onshore">onshore</option>
-                            <option value="offshore">offshore</option>
-                        </select>
-                   
-                </td>
-                <td>
-                    
-                        <select id="offshore-city" asp-for="project.OffshoreCity" asp-items="Model.OffShoreCityOptions" class="hidden form-control">
-                            <option value="">-- Select City --</option>
-                        </select>
-                   
-                </td>
-                <td>
-                   
-                        <input asp-for="project.OffshoreBackup" class="form-control" />
-                        <span asp-validation-for="project.OffshoreBackup" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                        <input asp-for="project.AltriaPODOwner" class="form-control" />
-                        <span asp-validation-for="project.AltriaPODOwner" class="text-danger"></span>
-                  
-                </td>
-                <td>
-                    
-                        <input asp-for="project.ALCSDirector" class="form-control" />
-                        <span asp-validation-for="project.ALCSDirector" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                   
-                        <select asp-for="project.Type" asp-items="Model.TypeOptions" class="form-control">
-                            <option value="">-- Select Type --</option>
-                        </select>
-                        <span asp-validation-for="project.Type" class="text-danger"></span>
-                   
-                </td>
-                <td>
-                    
-                        <select asp-for="project.Tower" asp-items="Model.TowerOptions" class="form-control">
-                            <option value="">-- Select Tower --</option>
-                        </select>
-                        <span asp-validation-for="project.Tower" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                        <select asp-for="project.ABLGBL" class="form-control">
-                            <option value="">-- Select ABLGBL --</option>
-                            <option value="ABL"> ABL </option>
-                            <option value="GBL"> GBL </option>
-                        </select>
-                   
-                </td>
-                <td>
-                    
-                        <input asp-for="project.TLName" class="form-control" />
-                        <span asp-validation-for="project.TLName" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                    
-                        <input asp-for="project.Transition" class="form-control" />
-                        <span asp-validation-for="project.Transition" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                        <input asp-for="project.COR" type="text" class="form-control"/>
-                        <span asp-validation-for="project.COR" class="text-danger"></span>
-                    
-                </td>
-                <td>
-                    <input asp-for="project.Group" type="text" class="form-control"/>
-                    <span asp-validation-for="project.Group" class="text-danger"></span>
-                   
-                </td>
-                <td>
-                        <input asp-for="project.RoleinPOD" type="text" class="form-control"/>
-                        <span asp-validation-for="project.RoleinPOD" class="text-danger"></span>
-                   
-                </td>
-                <td>
-                        <input asp-for="project.MonthlyPrice" type="number" step="0.01" class="form-control" />
-                        <span asp-validation-for="project.MonthlyPrice" class="text-danger"></span>
-                </td>
-                <td><input asp-for="project.January" type="number" step="0.1"></td>
-                <td><input asp-for="project.February" type="number" step="0.1"></td>
-                <td><input asp-for="project.March" type="number" step="0.1"></td>
-                <td><input asp-for="project.April" type="number" step="0.1"></td>
-                <td><input asp-for="project.May" type="number" step="0.1"></td>
-                <td><input asp-for="project.June" type="number" step="0.1"></td>
-                <td><input asp-for="project.July" type="number" step="0.1"></td>
-                <td><input asp-for="project.August" type="number" step="0.1"></td>
-                <td><input asp-for="project.September" type="number" step="0.1"></td>
-                <td><input asp-for="project.October" type="number" step="0.1"></td>
-                <td><input asp-for="project.November" type="number" step="0.1"></td>
-                <td><input asp-for="project.December" type="number" step="0.1"></td>
-                <td>
-                    <button class="btn btn-danger delete-row-btn">Delete</button>
-                </td>
-                
-                <button type="submit" class="btn btn-primary">Save</button>
-            
-            </tr>
-        </form>
-    </tbody>
-    
-</table>
-
-
+    </table>
 </div>
