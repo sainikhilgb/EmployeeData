@@ -10,6 +10,7 @@ namespace EmployeeData.Pages.Registration
     public class Registration : PageModel
     {
         private string employeeFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmployeeData.xlsx");
+        
 
         [BindProperty]
         public Employee Employee { get; set; } = new Employee();
@@ -24,10 +25,13 @@ namespace EmployeeData.Pages.Registration
         public List<SelectListItem> OffShoreCityOptions { get; set; }
         public List<SelectListItem> TypeOptions { get; set; }
         public List<SelectListItem> TowerOptions { get; set; }
+        public List<SelectListItem> CertificationOptions { get; set; }
+         public List<SelectListItem> VISATypeOptions { get; set; }
 
         private Dictionary<string, string> projectCodeToNameMapping = new Dictionary<string, string>();
 
         private Dictionary<string, string> GradeToGlobalGrade = new Dictionary<string, string>();
+        // private Dictionary<string, List<string>> ProjectCodeToPODMapping { get; set; } = new Dictionary<string, List<string>>();
 
 
                  
@@ -36,6 +40,7 @@ namespace EmployeeData.Pages.Registration
         {
             // Load dropdown options from the dropdown file
             LoadDropdownOptions();
+            // LoadProjectCodeToPODMapping();
 
             if (!string.IsNullOrEmpty(empId))
             {
@@ -44,6 +49,13 @@ namespace EmployeeData.Pages.Registration
                 if (Employee != null)
                 {
                     Employee = Employee;
+                    // Populate the POD dropdown if a project code is already selected
+                    if (ProjectCodeToPODMapping.ContainsKey(Employee.ProjectCode.ToString()))
+                    {
+                        PODNameOptions = ProjectCodeToPODMapping[Employee.ProjectCode.ToString()]
+                            .Select(pod => new SelectListItem { Value = pod, Text = pod })
+                            .ToList();
+                    }
                 }
                 else
                 {
@@ -59,6 +71,12 @@ namespace EmployeeData.Pages.Registration
         // OnPost to save a new employee record or update an existing one
         public async Task<IActionResult> OnPost()
         {
+                if (Employee.Certificates == "Others" && !string.IsNullOrWhiteSpace(Employee.OtherCertificate))
+            {
+                // Set the custom certificate value if "Others" is selected
+                Employee.Certificates = Employee.OtherCertificate;
+            }
+           
             // Validate model
             if (!ModelState.IsValid)
             {
@@ -117,6 +135,7 @@ namespace EmployeeData.Pages.Registration
                         worksheet.Cells[rowCount, 129].Value = Employee.BGVStatus; // BGVStatus
                         worksheet.Cells[rowCount, 133].Value = Employee.BGVCompletionDate.ToString("dd-MM-yyy"); // Column 133: BGV EndDate
                         worksheet.Cells[rowCount, 130].Value = Employee.VISAStatus; // VISAStatus
+                        worksheet.Cells[rowCount, 134].Value = Employee.VISAType; // VISAType
 
                         worksheet.Cells[rowCount, 1].Value = Employee.Type; // Column 1: Type
                         worksheet.Cells[rowCount, 2].Value = Employee.Tower; // Column 2: Tower
@@ -125,7 +144,16 @@ namespace EmployeeData.Pages.Registration
                         worksheet.Cells[rowCount, 7].Value = Employee.ProjectCode; // Column 7: ProjectCode
                         worksheet.Cells[rowCount, 8].Value = Employee.ProjectName; // Column 8: ProjectName
                         worksheet.Cells[rowCount, 9].Value = Employee.PONumber; // Column 9: PONumber
-                        worksheet.Cells[rowCount, 10].Value = Employee.PODName; // Column 10: PODName
+                        // Map the Project Code to the corresponding POD Name
+                        worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
+                // if (ProjectCodeToPODMapping.ContainsKey(Employee.ProjectCode.ToString()))
+                // {
+                //     worksheet.Cells[existingRow, 10].Value = string.Join(",", ProjectCodeToPODMapping[Employee.ProjectCode.ToString()]); // PODName
+                // }
+                // else
+                // {
+                //     worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
+                // }
                         worksheet.Cells[rowCount, 12].Value = Employee.AltriaPODOwner; // Column 12: AltriaPODOwner
                         worksheet.Cells[rowCount, 13].Value = Employee.ALCSDirector; // Column 13: ALCSDirector
                         worksheet.Cells[rowCount, 22].Value = Employee.Location; // Column 22: Location
@@ -141,6 +169,20 @@ namespace EmployeeData.Pages.Registration
                         // Dates: Ensure that start and end dates are formatted correctly
                         worksheet.Cells[rowCount, 131].Value = Employee.StartDate.ToString("dd-MM-yyy"); // Column 131: StartDate
                         worksheet.Cells[rowCount, 132].Value = Employee.EndDate.ToString("dd-MM-yyy"); // Column 132: EndDate
+
+                        
+                        worksheet.Cells[rowCount, 36].Value = Employee.January; // Column 36: January
+                        worksheet.Cells[rowCount, 37].Value = Employee.February; // Column 37: February
+                        worksheet.Cells[rowCount, 38].Value = Employee.March; // Column 38: March
+                        worksheet.Cells[rowCount, 39].Value = Employee.April; // Column 39: April
+                        worksheet.Cells[rowCount, 40].Value = Employee.May; // Column 40: May
+                        worksheet.Cells[rowCount, 41].Value = Employee.June; // Column 41: June
+                        worksheet.Cells[rowCount, 42].Value = Employee.July; // Column 42: July
+                        worksheet.Cells[rowCount, 43].Value = Employee.August; // Column 43: August
+                        worksheet.Cells[rowCount, 44].Value = Employee.September; // Column 44: September
+                        worksheet.Cells[rowCount, 45].Value = Employee.October; // Column 45: October
+                        worksheet.Cells[rowCount, 46].Value = Employee.November; // Column 46: November
+                        worksheet.Cells[rowCount, 47].Value = Employee.December; // Column 47: December
 
                         
                         return RedirectToPage("/Registration/EmployeeList");
@@ -189,6 +231,81 @@ namespace EmployeeData.Pages.Registration
                 }
             }
         }
+        
+    //    private void LoadProjectCodeToPODMapping()
+    // {
+    //     // Load the Excel file with project codes and PODs
+    //     using (var package = new ExcelPackage(new FileInfo(employeeFilePath)))
+    //     {
+    //         var worksheet = package.Workbook.Worksheets[0];  // Assuming the data is in the first sheet
+    //         int rowCount = worksheet.Dimension.Rows;
+
+    //         // Read each row and populate the ProjectCodeToPODMapping dictionary
+    //         for (int row = 2; row <= rowCount; row++)  // Assuming the first row is header
+    //         {
+    //             string projectCode = worksheet.Cells[row, 3].Text;  // Read the Project Code (Column 1)
+    //             string pods = worksheet.Cells[row, 5].Text;  // Read the PODs (Column 2)
+
+    //             if (!string.IsNullOrEmpty(projectCode) && !string.IsNullOrEmpty(pods))
+    //             {
+    //                 // Split POD names into a list and assign to the project code
+    //                 var podList = new List<string>(pods.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+    //                 ProjectCodeToPODMapping[projectCode] = podList;
+    //             }
+    //         }
+    //     }
+    // }
+        private Dictionary<string, List<string>> ProjectCodeToPODMapping = new Dictionary<string, List<string>>
+        {
+            { "101025223", new List<string> { "Pod -1 - Consumer", "Pod -2 Customer", "Pod 3-Supply Chain & MFG","Pod 4- Data Governance","Pod -5- Platform Arch& Support" } },
+            { "101025267", new List<string> { "SAP-FIN POD -3" } },
+            { "101037290", new List<string> { "SAP AMS Cloud Work(Fixed Fee)" } },
+            {"101040454",  new List<string> {"OMS Mgd Srvcs_Salesforce"}},
+            {"101053508",  new List<string> {"Magento Commerce MS"}},
+            {"101055770",  new List<string> {"EOL"}},
+            {"101070251",  new List<string> {"ITRM Analytics"}},
+            {"101078498",  new List<string> {"AD Project"}},
+            {"101096267",  new List<string> {"Ecommerce Support"}},
+            {"101119886",  new List<string> {"Finished Goods"}},
+            {"101119907",  new List<string> {"PLM - One Lab ","PLM - One Lab POD 02","PLM - Product Management"}},
+            {"101120042",  new List<string> {"MFG RICH - MSF POD MFG-POWER BI","MFG-Demand Management","MES POD","MFG NASH - MSF POD","TBD","NBT"}},
+            {"101120070",  new List<string> {"Sales-AIS","Sales-Governance","Core - Cross Functional","Core - InsightsC3M","Core - Payment Validations","Core - Pricing & SDF Interfaces","Core - Scan Development","Core - Scan Ops","Core - Scoring & Payments","Core - SDF Modernization (Cloud Tfs)","APIs - Core",
+            "APIs - Trade","SFDC - Administration","SFDC - Architecture Design","SFDC - External Sites","SFDC - Innovation Hub","SFDC - Integration","SFDC - Internal CRM","SFDC - Sales Analytics","SFDC - Testing","SFDC - Trade Support"}},
+            {"101120084",  new List<string> {"DAM & Workfront Support","DM-Core - AIM","DM-Core - Cross Functional","DM-Core - DVP-A","DM-Core - DVP-C","DM-Core - DVP-B","Contingent","DM-Core - GTC-A","DM-Core - GTC-B","NJOY PWA","Governance","Corporate SAP","Manufacturing SAP","IT Ops SAP","Corporate non-SAP","CRT",
+            "IT Ops Non-SAP","Collaboration & Reporting","Sales","Manufacturing PM USA CM","Manufacturing PM USA Primary","Manufacturing PM USA Others","Manufacturing UST","PMO","Manufacturing PM USA Others"}},
+           
+            {"101120114",  new List<string> {"Governance"}},
+            {"101120117",  new List<string> {"EUE - PowerUp","EUE - RPA","EUE-AI","EUE - AI-Functional","EUE - AI-Dev-POD2"}},
+            {"101120123",  new List<string> {"EA-Azure Architect"}},
+            {"101120129",  new List<string> {"Sales"}},
+            {"101122805",  new List<string> {"ITG"}},
+            {"101125056",  new List<string> {"Brand Portal","Governance"}},
+            {"101127193",  new List<string> {"AD Project"}},
+            {"101129779",  new List<string> {"AD Project"}},
+            {"101130062",  new List<string> {"SQL"}},
+            {"101133026",  new List<string> {"WFM"}},
+            {"101133770",  new List<string> {"TAMMA"}},
+            {"101133987",  new List<string> {"Noth Pole"}},
+            {"101137768",  new List<string> {"BRE"}},
+            {"101137775",  new List<string> {"NorthPole SAF"}},
+            {"101137908",  new List<string> {"Testing & BA Services"}},
+            {"101025223_ERD", new List<string> {"Pod 4- Data Governance"}},
+            {"101120117_Invent", new List<string> {"EUE - AI-Functional"}},
+            {"TBD",   new List<string> {"Automation POD","Helix"}}
+        };
+
+        public JsonResult OnGetPODNames(string projectCode)
+        {
+            if (ProjectCodeToPODMapping.ContainsKey(projectCode))
+            {
+                var podNames = ProjectCodeToPODMapping[projectCode];
+                return new JsonResult(podNames);
+            }else{
+
+            return new JsonResult(new List<string>()); // Return an empty list if project code not found
+            }
+
+        }
 
         private void LoadDropdownOptions()
         {
@@ -202,6 +319,8 @@ namespace EmployeeData.Pages.Registration
             OffShoreCityOptions = new List<SelectListItem>();
             TypeOptions = new List<SelectListItem>();
             TowerOptions = new List<SelectListItem>();
+            CertificationOptions = new List<SelectListItem>();
+            VISATypeOptions = new List<SelectListItem>();
             
 
             if (System.IO.File.Exists(employeeFilePath))
@@ -227,6 +346,8 @@ namespace EmployeeData.Pages.Registration
                         var tower = worksheet.Cells[row, 8]?.Text?.Trim();
                         var globalgrade = worksheet.Cells[row, 9]?.Text?.Trim();
                         var bgv = worksheet.Cells[row, 10]?.Text?.Trim();
+                        var certificate = worksheet.Cells[row,11]?.Text?.Trim();
+                        var visaType  = worksheet.Cells[row,12]?.Text?.Trim();
 
                         if (!string.IsNullOrWhiteSpace(grade)) 
                         { 
@@ -248,7 +369,8 @@ namespace EmployeeData.Pages.Registration
                         
                         if (!string.IsNullOrWhiteSpace(PODname))
                         {
-                            PODNameOptions.Add(new SelectListItem { Value = PODname, Text = PODname });
+                            PODNameOptions.Add(new SelectListItem  { Value = "", Text = "--Select POD--" });
+
                         }
                         if (!string.IsNullOrWhiteSpace(Offshore))
                         {
@@ -262,7 +384,17 @@ namespace EmployeeData.Pages.Registration
                         {
                             TowerOptions.Add(new SelectListItem { Value = tower, Text = tower });
                         }
+                        if (!string.IsNullOrWhiteSpace(certificate))
+                        {
+                           
 
+                            CertificationOptions.Add(new SelectListItem { Value = certificate, Text = certificate });
+                            
+                        }
+                         if (!string.IsNullOrWhiteSpace(visaType))
+                        {
+                            VISATypeOptions.Add(new SelectListItem { Value = visaType, Text = visaType });
+                        }
                         
                     }
                 }
@@ -337,6 +469,7 @@ namespace EmployeeData.Pages.Registration
             worksheet.Cells[row, 129].Value = Employee.BGVStatus; // BGVStatus
             worksheet.Cells[row, 133].Value = Employee.BGVCompletionDate.ToString("dd-MM-yyy"); // BGV Enddate
             worksheet.Cells[row, 130].Value = Employee.VISAStatus; // VISAStatus
+            worksheet.Cells[row, 134].Value = Employee.VISAType; // VISAType
 
             worksheet.Cells[row, 1].Value = Employee.Type; // Column 1: Type
             worksheet.Cells[row, 2].Value = Employee.Tower; // Column 2: Tower
@@ -361,6 +494,19 @@ namespace EmployeeData.Pages.Registration
             // Dates: Ensure that start and end dates are formatted correctly
             worksheet.Cells[row, 131].Value = Employee.StartDate.ToString("dd-MM-yyy"); // Column 131: StartDate
             worksheet.Cells[row, 132].Value = Employee.EndDate.ToString("dd-MM-yyy"); // Column 132: EndDate
+
+            worksheet.Cells[row, 36].Value = Employee.January; // Column 36: January
+            worksheet.Cells[row, 37].Value = Employee.February; // Column 37: February
+            worksheet.Cells[row, 38].Value = Employee.March; // Column 38: March
+            worksheet.Cells[row, 39].Value = Employee.April; // Column 39: April
+            worksheet.Cells[row, 40].Value = Employee.May; // Column 40: May
+            worksheet.Cells[row, 41].Value = Employee.June; // Column 41: June
+            worksheet.Cells[row, 42].Value = Employee.July; // Column 42: July
+            worksheet.Cells[row, 43].Value = Employee.August; // Column 43: August
+            worksheet.Cells[row, 44].Value = Employee.September; // Column 44: September
+            worksheet.Cells[row, 45].Value = Employee.October; // Column 45: October
+            worksheet.Cells[row, 46].Value = Employee.November; // Column 46: November
+            worksheet.Cells[row, 47].Value = Employee.December; // Column 47: December
         }
 
         private List<Employee> GetAllEmployees()
@@ -399,6 +545,7 @@ namespace EmployeeData.Pages.Registration
                             BGVStatus = worksheet.Cells[row, 129].Text,
                             BGVCompletionDate = ParseDate(worksheet.Cells[row, 133].Text),
                             VISAStatus = worksheet.Cells[row, 130].Text,
+                            VISAType = worksheet.Cells[row, 134].Text,
 
                             ProjectCode = ParseInt(worksheet.Cells[row, 7].Text),
                             ProjectName = worksheet.Cells[row, 8].Text,

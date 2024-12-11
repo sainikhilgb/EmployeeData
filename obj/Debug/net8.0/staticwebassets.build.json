@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "zAmuethS90uz5URZG7ZEDE6qNTn2e7aNPmOU0cBOSq4=",
+  "Hash": "yIZ1bh+XPRMn7xGxDSha5T7a4ZwMyqymkANJVaTBjps=",
   "Source": "EmployeeData",
   "BasePath": "_content/EmployeeData",
   "Mode": "Default",
@@ -112,6 +112,25 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\Images\\Altria.png",
+      "SourceId": "EmployeeData",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\",
+      "BasePath": "_content/EmployeeData",
+      "RelativePath": "Images/Altria.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\Altria.png"
+    },
+    {
       "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\Images\\Background.png",
       "SourceId": "EmployeeData",
       "SourceType": "Discovered",
@@ -129,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\Background.png"
+    },
+    {
+      "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\Images\\Capg.png",
+      "SourceId": "EmployeeData",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\",
+      "BasePath": "_content/EmployeeData",
+      "RelativePath": "Images/Capg.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\Capg.png"
     },
     {
       "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\js\\site.js",
@@ -1231,25 +1269,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
-    },
-    {
-      "Identity": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\site.css",
-      "SourceId": "EmployeeData",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\wwwroot\\",
-      "BasePath": "_content/EmployeeData",
-      "RelativePath": "site.css",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\site.css"
     }
   ]
 }

@@ -4,12 +4,13 @@
 @{
     ViewData["Title"] =  "Employee List" ;
 }
-<div class=" mb-4 row">
-
 <!-- Search Form -->
+<form method="get" class="search-form row">
+<div class=" row">
+<div class=" m-4">
     <h2 class="section-header">Employee Details</h2>
-<form method="get" class=" search-form col-4">
-    <div class="form-group">
+</div>
+    <div class="form-group col-4">
         <label for="SearchTerm">Search:</label>
         <input type="text" id="SearchTerm" name="SearchTerm" class="form-group" value="@Model.SearchTerm" placeholder="Enter search term" />
     </div>
@@ -17,13 +18,8 @@
 {
     <div class="alert alert-warning">@Model.Message</div>
 }
-    <button id="search-btn"type="submit" class="btn btn-primary">Search</button>
+    <button id="search-btn"type="submit" class="btn btn-primary col-4">Search</button>
 </form>
-<div class="col-4">
-<a href="https://app.powerbi.com/links/ska3BhZRLm?ctid=76a2ae5a-9f00-4f6b-95ed-5d33d77c4d61&pbi_source=linkShare&bookmarkGuid=63068241-2b95-496f-bdfc-3b04dd64b672"target="_blank">
-<button class=" redirect-button ml-20" >Powerbi BI Report</button>
-</a>
-</div>
 </div>
 
 <!-- Display No Results Found Message if Employees List is Empty -->
@@ -80,7 +76,7 @@
                         <td>@employee.BGVStatus</td>
                         <td>@employee.VISAStatus</td>
                         <td>
-                        <form method="get" asp-page="/Registration/Registration" asp-route-empId="@employee.EmpId" style="display:inline;">
+                        <form method="get" asp-page="/Registration/Registration" asp-route-empId="@employee.EmpId" >
                                 <button type="submit" class="btn btn-primary" >Edit</button>
                         </form>
                         <form method="post" asp-page-handler="Delete" asp-route-empId="@employee.EmpId" style="display:inline;">
@@ -127,6 +123,7 @@
                 <th>COR</th>
                 <th>Group</th>
                 <th>Role in POD</th>
+                <th>Monthly Price</th> 
                 <th>January</th>
                 <th>February</th>
                 <th>March</th>
@@ -139,7 +136,6 @@
                 <th>October</th>
                 <th>November</th>
                 <th>December</th>
-                <th>Monthly Price</th> 
                 <th>Action</th>
             </tr>
         </thead>

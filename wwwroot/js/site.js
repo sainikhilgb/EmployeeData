@@ -56,3 +56,42 @@ function fetchGlobalGrade(grade) {
     });
     window.location.href = `http://localhost:5165/Registration/Registration?handler=empId=${empId}`;
 }
+
+$(document).ready(function () {
+    $('#ProjectCode').change(function () {
+        var projectCode = $(this).val(); // Get selected project code
+        $('#PODName').empty().append('<option value="">--Select POD--</option>'); // Clear previous options
+
+        if (projectCode) {
+            $.ajax({
+                url: '/Registration/Registration', // The URL of the Razor Page
+                data: { handler: 'PODNames', projectCode: projectCode }, // Pass handler and projectCode
+                
+                success: function (data) {
+                    console.log('Data received:', data);
+                    // Populate the POD dropdown with the response
+                    $.each(data, function (index, podName) {
+                        $('#PODName').append('<option value="' + podName + '">' + podName + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error: ' + error); // Log any errors for debugging
+                }
+            });
+        }
+    });
+});
+
+function toggleOtherTextbox() {
+    var dropdown = document.getElementById('Certificates');
+    var otherCertificate = document.getElementById('OtherCertificate');
+    if (dropdown.value === 'Others') {
+        otherCertificate.style.display = 'block';
+    } else {
+        otherCertificate.style.display = 'none';
+        // Submit the form if it was visible previously
+        if (otherCertificate.style.display === '') {
+            document.forms[0].submit(); // Submit the first form on the page
+        }
+    }
+}

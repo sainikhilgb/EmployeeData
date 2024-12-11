@@ -17,6 +17,8 @@ html {
     height: 100%;
     
 }
+
+
 main{
     font-family: Verdana;
     margin: 0;
@@ -138,15 +140,24 @@ input[type="radio"] {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 15px;
+    text-align: center;
 }
 
-.table thead th {
+.table thead  {
+    background-color: rgb(28, 98, 162);
+    color: #fff;
+    font-weight: bold;
+    
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.table th{
     background-color: rgb(28, 98, 162);
     color: #fff;
     font-weight: bold;
     text-align: center;
-    padding: 10px;
-    border: 1px solid #ddd;
+    height: 20px;
+   
 }
 
 .table tbody td {
@@ -154,6 +165,7 @@ input[type="radio"] {
     padding: 8px;
     border: 1px solid #ddd;
     background-color: #f9f9f9;
+   
 }
 
 .table tbody input[type="number"] {
@@ -181,7 +193,7 @@ form .search-form{
 }
 
 .ml-20 {
-    margin-left: 20px; /* Applies a 20px margin to the left */
+    margin-left: 50px; /* Applies a 20px margin to the left */
 }
 .mb-4 {
     display: flex; /* Use flexbox for positioning */
@@ -190,6 +202,9 @@ form .search-form{
     
 }
 #search-btn{
+    
+    height: 50px;
+    width: 20%;
     border-radius: 10px; /* Rounded corners */
 }
  #search-btn:hover {
@@ -212,8 +227,15 @@ form .search-form{
     transform: scale(1.1); /* Slightly increase size on hover */
 }
 h2{
-    font-family: Verdana;
+    background-color: rgb(28, 98, 162);
+    font-family: Verdana,Bold;
     font-size: xx-large;
+    margin: auto;
+    color: white;
+    text-align: center;
+    padding-block: 10px;
+   
+
 }
 /* Responsive design */
 @media (max-width: 768px) {

@@ -36,9 +36,9 @@ namespace EmployeeData.Models
 
         public decimal OverallExp {get; set;}
         public string Skills {get; set;}
-
-        
         public string Certificates {get; set;}
+        [Required(ErrorMessage = "Please specify the other certificate")]
+        public string OtherCertificate {get; set;}
 
         [Required(ErrorMessage = "Please enter the Altria Start date")]
         [DataType(DataType.Date)]
@@ -58,8 +58,11 @@ namespace EmployeeData.Models
         [DisplayName("BGV Completion Date")]
          public DateTime BGVCompletionDate {get; set;}
 
-         [Required(ErrorMessage = "Please select VISA Status")]
+         [Required(ErrorMessage = "Please select VISA Availability")]
          public string VISAStatus {get; set;}
+
+         [Required(ErrorMessage = "Please select VISA Type")]
+         public string VISAType {get; set;}
 
          [DisplayName("Project Code")]
          public int ProjectCode {get; set;}
