@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj": {}
+    "c:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj": {
+    "c:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj",
+        "projectUniqueName": "c:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj",
         "projectName": "EmployeeData",
-        "projectPath": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj",
+        "projectPath": "c:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\EmployeeData.csproj",
         "packagesPath": "C:\\Users\\sgodlave\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\obj\\",
+        "outputPath": "c:\\Users\\sgodlave\\OneDrive - Capgemini\\Documents\\DotNet\\EmployeeData\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sgodlave\\AppData\\Roaming\\NuGet\\NuGet.Config",

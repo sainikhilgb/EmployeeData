@@ -47,7 +47,7 @@ namespace EmployeeData.Pages.Registration
              {
             // Filter the employees based on EmpId or Email
             var filteredEmployees = Employees
-                .Where(e => e.EmpId.ToString().Contains(SearchTerm) || e.Email.Contains(SearchTerm))
+                .Where(e => e.EmpId.ToString().Contains(SearchTerm) || e.Email.Contains(SearchTerm) || e.ProjectCode.ToString().Contains(SearchTerm))
                 .ToList();
 
             if (filteredEmployees.Any())

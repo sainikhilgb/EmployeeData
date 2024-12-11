@@ -31,7 +31,7 @@ namespace EmployeeData.Pages.Registration
         private Dictionary<string, string> projectCodeToNameMapping = new Dictionary<string, string>();
 
         private Dictionary<string, string> GradeToGlobalGrade = new Dictionary<string, string>();
-        // private Dictionary<string, List<string>> ProjectCodeToPODMapping { get; set; } = new Dictionary<string, List<string>>();
+         private Dictionary<string, List<string>> ProjectCodeToPODMapping { get; set; } = new Dictionary<string, List<string>>();
 
 
                  
@@ -40,7 +40,7 @@ namespace EmployeeData.Pages.Registration
         {
             // Load dropdown options from the dropdown file
             LoadDropdownOptions();
-            // LoadProjectCodeToPODMapping();
+             LoadProjectCodeToPODMapping();
 
             if (!string.IsNullOrEmpty(empId))
             {
@@ -145,15 +145,15 @@ namespace EmployeeData.Pages.Registration
                         worksheet.Cells[rowCount, 8].Value = Employee.ProjectName; // Column 8: ProjectName
                         worksheet.Cells[rowCount, 9].Value = Employee.PONumber; // Column 9: PONumber
                         // Map the Project Code to the corresponding POD Name
-                        worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
-                // if (ProjectCodeToPODMapping.ContainsKey(Employee.ProjectCode.ToString()))
-                // {
-                //     worksheet.Cells[existingRow, 10].Value = string.Join(",", ProjectCodeToPODMapping[Employee.ProjectCode.ToString()]); // PODName
-                // }
-                // else
-                // {
-                //     worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
-                // }
+                        //worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
+                if (ProjectCodeToPODMapping.ContainsKey(Employee.ProjectCode.ToString()))
+                {
+                    worksheet.Cells[existingRow, 10].Value = string.Join(",", ProjectCodeToPODMapping[Employee.ProjectCode.ToString()]); // PODName
+                }
+                else
+                {
+                    worksheet.Cells[existingRow, 10].Value = Employee.PODName; // PODName (in case no mapping exists)
+                }
                         worksheet.Cells[rowCount, 12].Value = Employee.AltriaPODOwner; // Column 12: AltriaPODOwner
                         worksheet.Cells[rowCount, 13].Value = Employee.ALCSDirector; // Column 13: ALCSDirector
                         worksheet.Cells[rowCount, 22].Value = Employee.Location; // Column 22: Location
@@ -232,70 +232,32 @@ namespace EmployeeData.Pages.Registration
             }
         }
         
-    //    private void LoadProjectCodeToPODMapping()
-    // {
-    //     // Load the Excel file with project codes and PODs
-    //     using (var package = new ExcelPackage(new FileInfo(employeeFilePath)))
-    //     {
-    //         var worksheet = package.Workbook.Worksheets[0];  // Assuming the data is in the first sheet
-    //         int rowCount = worksheet.Dimension.Rows;
+       private void LoadProjectCodeToPODMapping()
+    {
+        // Load the Excel file with project codes and PODs
+        var package = new ExcelPackage(new FileInfo(employeeFilePath));
+        
+            var worksheet = package.Workbook.Worksheets[1];  // Assuming the data is in the first sheet
+            int rowCount = worksheet.Dimension?.Rows?? 1;
 
-    //         // Read each row and populate the ProjectCodeToPODMapping dictionary
-    //         for (int row = 2; row <= rowCount; row++)  // Assuming the first row is header
-    //         {
-    //             string projectCode = worksheet.Cells[row, 3].Text;  // Read the Project Code (Column 1)
-    //             string pods = worksheet.Cells[row, 5].Text;  // Read the PODs (Column 2)
+            // Read each row and populate the ProjectCodeToPODMapping dictionary
+            for (int row = 2; row <= rowCount; row++)  // Assuming the first row is header
+            {
+                string projectCode = worksheet.Cells[row, 3].Text;  // Read the Project Code (Column 1)
+                string pods = worksheet.Cells[row, 5].Text;  // Read the PODs (Column 2)
 
-    //             if (!string.IsNullOrEmpty(projectCode) && !string.IsNullOrEmpty(pods))
-    //             {
-    //                 // Split POD names into a list and assign to the project code
-    //                 var podList = new List<string>(pods.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
-    //                 ProjectCodeToPODMapping[projectCode] = podList;
-    //             }
-    //         }
-    //     }
-    // }
-        private Dictionary<string, List<string>> ProjectCodeToPODMapping = new Dictionary<string, List<string>>
-        {
-            { "101025223", new List<string> { "Pod -1 - Consumer", "Pod -2 Customer", "Pod 3-Supply Chain & MFG","Pod 4- Data Governance","Pod -5- Platform Arch& Support" } },
-            { "101025267", new List<string> { "SAP-FIN POD -3" } },
-            { "101037290", new List<string> { "SAP AMS Cloud Work(Fixed Fee)" } },
-            {"101040454",  new List<string> {"OMS Mgd Srvcs_Salesforce"}},
-            {"101053508",  new List<string> {"Magento Commerce MS"}},
-            {"101055770",  new List<string> {"EOL"}},
-            {"101070251",  new List<string> {"ITRM Analytics"}},
-            {"101078498",  new List<string> {"AD Project"}},
-            {"101096267",  new List<string> {"Ecommerce Support"}},
-            {"101119886",  new List<string> {"Finished Goods"}},
-            {"101119907",  new List<string> {"PLM - One Lab ","PLM - One Lab POD 02","PLM - Product Management"}},
-            {"101120042",  new List<string> {"MFG RICH - MSF POD MFG-POWER BI","MFG-Demand Management","MES POD","MFG NASH - MSF POD","TBD","NBT"}},
-            {"101120070",  new List<string> {"Sales-AIS","Sales-Governance","Core - Cross Functional","Core - InsightsC3M","Core - Payment Validations","Core - Pricing & SDF Interfaces","Core - Scan Development","Core - Scan Ops","Core - Scoring & Payments","Core - SDF Modernization (Cloud Tfs)","APIs - Core",
-            "APIs - Trade","SFDC - Administration","SFDC - Architecture Design","SFDC - External Sites","SFDC - Innovation Hub","SFDC - Integration","SFDC - Internal CRM","SFDC - Sales Analytics","SFDC - Testing","SFDC - Trade Support"}},
-            {"101120084",  new List<string> {"DAM & Workfront Support","DM-Core - AIM","DM-Core - Cross Functional","DM-Core - DVP-A","DM-Core - DVP-C","DM-Core - DVP-B","Contingent","DM-Core - GTC-A","DM-Core - GTC-B","NJOY PWA","Governance","Corporate SAP","Manufacturing SAP","IT Ops SAP","Corporate non-SAP","CRT",
-            "IT Ops Non-SAP","Collaboration & Reporting","Sales","Manufacturing PM USA CM","Manufacturing PM USA Primary","Manufacturing PM USA Others","Manufacturing UST","PMO","Manufacturing PM USA Others"}},
-           
-            {"101120114",  new List<string> {"Governance"}},
-            {"101120117",  new List<string> {"EUE - PowerUp","EUE - RPA","EUE-AI","EUE - AI-Functional","EUE - AI-Dev-POD2"}},
-            {"101120123",  new List<string> {"EA-Azure Architect"}},
-            {"101120129",  new List<string> {"Sales"}},
-            {"101122805",  new List<string> {"ITG"}},
-            {"101125056",  new List<string> {"Brand Portal","Governance"}},
-            {"101127193",  new List<string> {"AD Project"}},
-            {"101129779",  new List<string> {"AD Project"}},
-            {"101130062",  new List<string> {"SQL"}},
-            {"101133026",  new List<string> {"WFM"}},
-            {"101133770",  new List<string> {"TAMMA"}},
-            {"101133987",  new List<string> {"Noth Pole"}},
-            {"101137768",  new List<string> {"BRE"}},
-            {"101137775",  new List<string> {"NorthPole SAF"}},
-            {"101137908",  new List<string> {"Testing & BA Services"}},
-            {"101025223_ERD", new List<string> {"Pod 4- Data Governance"}},
-            {"101120117_Invent", new List<string> {"EUE - AI-Functional"}},
-            {"TBD",   new List<string> {"Automation POD","Helix"}}
-        };
+                if (!string.IsNullOrEmpty(projectCode) && !string.IsNullOrEmpty(pods))
+                {
+                    // Split POD names into a list and assign to the project code
+                    var podList = new List<string>(pods.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
+                    ProjectCodeToPODMapping[projectCode] = podList;
+                }
+            }
+        }
 
         public JsonResult OnGetPODNames(string projectCode)
         {
+            LoadProjectCodeToPODMapping();
             if (ProjectCodeToPODMapping.ContainsKey(projectCode))
             {
                 var podNames = ProjectCodeToPODMapping[projectCode];
